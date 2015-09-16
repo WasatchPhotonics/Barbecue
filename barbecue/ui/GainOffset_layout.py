@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'barbecue/ui/GainOffset.ui'
+# Form implementation generated from reading ui file 'barbecue\ui\GainOffset.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created: Wed Sep 16 17:07:50 2015
+#      by: PyQt4 UI code generator 4.8.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,40 +12,33 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(966, 680)
+        MainWindow.resize(1070, 680)
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Gain/Offset Configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.horizontalLayout_7 = QtGui.QHBoxLayout(self.centralwidget)
         self.horizontalLayout_7.setObjectName(_fromUtf8("horizontalLayout_7"))
         self.frameControl = QtGui.QFrame(self.centralwidget)
-        self.frameControl.setMinimumSize(QtCore.QSize(300, 0))
+        self.frameControl.setMinimumSize(QtCore.QSize(0, 0))
         self.frameControl.setMaximumSize(QtCore.QSize(300, 16777215))
         self.frameControl.setFrameShape(QtGui.QFrame.Panel)
         self.frameControl.setFrameShadow(QtGui.QFrame.Raised)
         self.frameControl.setObjectName(_fromUtf8("frameControl"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.frameControl)
-        self.verticalLayout_2.setContentsMargins(-1, 0, 9, 0)
         self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setContentsMargins(-1, 0, 9, 0)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.labelMainTitle = QtGui.QLabel(self.frameControl)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Sans Serif"))
         font.setPointSize(12)
         self.labelMainTitle.setFont(font)
+        self.labelMainTitle.setText(QtGui.QApplication.translate("MainWindow", "Gain/Offset Configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.labelMainTitle.setObjectName(_fromUtf8("labelMainTitle"))
         self.verticalLayout_2.addWidget(self.labelMainTitle)
         self.frame_6 = QtGui.QFrame(self.frameControl)
@@ -55,6 +49,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setContentsMargins(0, 9, 0, 9)
         self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
         self.toolButtonStart = QtGui.QToolButton(self.frame_6)
+        self.toolButtonStart.setText(QtGui.QApplication.translate("MainWindow", "Start", None, QtGui.QApplication.UnicodeUTF8))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/greys/greys/forward.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButtonStart.setIcon(icon)
@@ -65,6 +60,7 @@ class Ui_MainWindow(object):
         spacerItem = QtGui.QSpacerItem(20, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
         self.toolButtonPause = QtGui.QToolButton(self.frame_6)
+        self.toolButtonPause.setText(QtGui.QApplication.translate("MainWindow", "Pause", None, QtGui.QApplication.UnicodeUTF8))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/greys/greys/pause.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButtonPause.setIcon(icon1)
@@ -73,6 +69,7 @@ class Ui_MainWindow(object):
         self.toolButtonPause.setObjectName(_fromUtf8("toolButtonPause"))
         self.horizontalLayout_6.addWidget(self.toolButtonPause)
         self.labelProcessing = QtGui.QLabel(self.frame_6)
+        self.labelProcessing.setText(QtGui.QApplication.translate("MainWindow", "Currently processing 1 out of 65536 combinations.", None, QtGui.QApplication.UnicodeUTF8))
         self.labelProcessing.setWordWrap(True)
         self.labelProcessing.setObjectName(_fromUtf8("labelProcessing"))
         self.horizontalLayout_6.addWidget(self.labelProcessing)
@@ -90,12 +87,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label_3 = QtGui.QLabel(self.frame)
         self.label_3.setMinimumSize(QtCore.QSize(64, 0))
+        self.label_3.setText(QtGui.QApplication.translate("MainWindow", "Gain:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.horizontalLayout.addWidget(self.label_3)
         self.spinBoxGainStart = QtGui.QSpinBox(self.frame)
         self.spinBoxGainStart.setObjectName(_fromUtf8("spinBoxGainStart"))
         self.horizontalLayout.addWidget(self.spinBoxGainStart)
         self.label_4 = QtGui.QLabel(self.frame)
+        self.label_4.setText(QtGui.QApplication.translate("MainWindow", "to:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.horizontalLayout.addWidget(self.label_4)
         self.spinBoxGainEnd = QtGui.QSpinBox(self.frame)
@@ -113,6 +112,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.label_5 = QtGui.QLabel(self.frame_2)
         self.label_5.setMinimumSize(QtCore.QSize(64, 0))
+        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Offset:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.horizontalLayout_2.addWidget(self.label_5)
         self.spinBoxOffsetStart = QtGui.QSpinBox(self.frame_2)
@@ -120,6 +120,7 @@ class Ui_MainWindow(object):
         self.spinBoxOffsetStart.setObjectName(_fromUtf8("spinBoxOffsetStart"))
         self.horizontalLayout_2.addWidget(self.spinBoxOffsetStart)
         self.label_6 = QtGui.QLabel(self.frame_2)
+        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "to:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.horizontalLayout_2.addWidget(self.label_6)
         self.spinBoxOffsetEnd = QtGui.QSpinBox(self.frame_2)
@@ -136,6 +137,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setContentsMargins(0, -1, -1, -1)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
         self.label_7 = QtGui.QLabel(self.frame_3)
+        self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Line time:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setObjectName(_fromUtf8("label_7"))
         self.horizontalLayout_3.addWidget(self.label_7)
         self.spinBoxLineTime = QtGui.QSpinBox(self.frame_3)
@@ -153,6 +155,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
         self.label_8 = QtGui.QLabel(self.frame_4)
         self.label_8.setMinimumSize(QtCore.QSize(63, 0))
+        self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Int. time:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.horizontalLayout_4.addWidget(self.label_8)
         self.spinBoxIntegrationTime = QtGui.QSpinBox(self.frame_4)
@@ -169,12 +172,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setContentsMargins(0, -1, -1, -1)
         self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
         self.checkBoxDarkPixelAveragin = QtGui.QCheckBox(self.frame_5)
+        self.checkBoxDarkPixelAveragin.setText(QtGui.QApplication.translate("MainWindow", "Dark Pixel Averaging", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBoxDarkPixelAveragin.setObjectName(_fromUtf8("checkBoxDarkPixelAveragin"))
         self.horizontalLayout_5.addWidget(self.checkBoxDarkPixelAveragin)
         spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem5)
         self.verticalLayout_2.addWidget(self.frame_5)
         self.label_9 = QtGui.QLabel(self.frameControl)
+        self.label_9.setText(QtGui.QApplication.translate("MainWindow", "Processing results:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.verticalLayout_2.addWidget(self.label_9)
         self.listViewResults = QtGui.QListView(self.frameControl)
@@ -182,14 +187,19 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.listViewResults)
         self.horizontalLayout_7.addWidget(self.frameControl)
         self.frameImage = QtGui.QFrame(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frameImage.sizePolicy().hasHeightForWidth())
+        self.frameImage.setSizePolicy(sizePolicy)
         self.frameImage.setMinimumSize(QtCore.QSize(0, 0))
         self.frameImage.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.frameImage.setFrameShape(QtGui.QFrame.Panel)
         self.frameImage.setFrameShadow(QtGui.QFrame.Raised)
         self.frameImage.setObjectName(_fromUtf8("frameImage"))
         self.verticalLayout = QtGui.QVBoxLayout(self.frameImage)
-        self.verticalLayout.setMargin(0)
         self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setMargin(0)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.labelImagePlaceholder = QtGui.QLabel(self.frameImage)
         self.labelImagePlaceholder.setText(_fromUtf8(""))
@@ -200,7 +210,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.addWidget(self.frameImage)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 966, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1070, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
 
@@ -208,18 +218,6 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "Gain/Offset Configuration", None))
-        self.labelMainTitle.setText(_translate("MainWindow", "Gain/Offset Configuration", None))
-        self.toolButtonStart.setText(_translate("MainWindow", "Start", None))
-        self.toolButtonPause.setText(_translate("MainWindow", "Pause", None))
-        self.labelProcessing.setText(_translate("MainWindow", "Currently processing 1 out of 65536 combinations.", None))
-        self.label_3.setText(_translate("MainWindow", "Gain:", None))
-        self.label_4.setText(_translate("MainWindow", "to:", None))
-        self.label_5.setText(_translate("MainWindow", "Offset:", None))
-        self.label_6.setText(_translate("MainWindow", "to:", None))
-        self.label_7.setText(_translate("MainWindow", "Line time:", None))
-        self.label_8.setText(_translate("MainWindow", "Int. time:", None))
-        self.checkBoxDarkPixelAveragin.setText(_translate("MainWindow", "Dark Pixel Averaging", None))
-        self.label_9.setText(_translate("MainWindow", "Processing results:", None))
+        pass
 
 import bbq_resources_rc
