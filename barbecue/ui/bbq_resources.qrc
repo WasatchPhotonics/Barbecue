@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="greys">
+    <file>greys/fast_backward.svg</file>
+    <file>greys/forward.svg</file>
+    <file>greys/full_extent.svg</file>
+    <file>greys/pause.svg</file>
+    <file>greys/reset.svg</file>
+    <file>greys/select.svg</file>
+    <file>greys/zoom.svg</file>
+  </qresource>
+</RCC>
