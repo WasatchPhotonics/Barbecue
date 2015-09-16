@@ -16,7 +16,8 @@ import unittest
 
 from PyQt4 import QtGui, QtTest, QtCore
 
-from barbecue import controller
+from barbecue import gain_offset_controller
+from barbecue import GainOffset
 
 # All the classes below will reuese this qapplication
 app = QtGui.QApplication([])
@@ -25,7 +26,7 @@ app = QtGui.QApplication([])
 class TestGainOffsetControllerView(unittest.TestCase):
 
     def setUp(self):
-        self.form = controller.GainOffset()
+        self.form = gain_offset_controller.GainOffset()
 
     def tearDown(self):
         app.closeAllWindows()
@@ -37,6 +38,31 @@ class TestGainOffsetControllerView(unittest.TestCase):
         gain_stop  = self.form.ui.spinBoxGainEnd.value()
         self.assertEqual(gain_start, 0)
         self.assertEqual(gain_stop, 255)
+       
+class TestGainOffsetScript(unittest.TestCase):
+
+    def tearDown(self):
+        # This cleans up old windows from rapid tests
+        app.closeAllWindows()
+
+    def test_parser(self):
+        # Accept one option: testing, which causes the form to close
+        # itself which should only be used with the unittest as the
+        # controller. 
+        goapp = GainOffset.GainOffsetApplication()
+
+        # Fail with more than just -t
+        with self.assertRaises(SystemExit):
+            goapp.parse_args(["-t", "-s"])
+            
+        args = goapp.parse_args(["-t"])
+        self.assertTrue(args.testing)
+
+    def test_main_options(self):
+        # Verify that main run with the testing option auto-closes the
+        # application
+        result = GainOffset.main(["unittest", "-t"])
+        self.assertEquals(0, result)
         
 if __name__ == "__main__":
     unittest.main()

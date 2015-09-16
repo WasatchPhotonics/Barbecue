@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.labelImagePlaceholder = QtGui.QLabel(self.frameImage)
         self.labelImagePlaceholder.setText(_fromUtf8(""))
-        self.labelImagePlaceholder.setPixmap(QtGui.QPixmap(_fromUtf8("example_heatmap.jpg")))
+        self.labelImagePlaceholder.setPixmap(QtGui.QPixmap(_fromUtf8(":/imagery/example_heatmap.jpg")))
         self.labelImagePlaceholder.setScaledContents(True)
         self.labelImagePlaceholder.setObjectName(_fromUtf8("labelImagePlaceholder"))
         self.verticalLayout.addWidget(self.labelImagePlaceholder)

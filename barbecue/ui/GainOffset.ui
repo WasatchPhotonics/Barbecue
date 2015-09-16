@@ -436,7 +436,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>example_heatmap.jpg</pixmap>
+          <pixmap resource="bbq_resources.qrc">:/imagery/example_heatmap.jpg</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
