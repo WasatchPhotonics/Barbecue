@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>842</width>
+    <width>966</width>
     <height>680</height>
    </rect>
   </property>
@@ -70,11 +70,20 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <property name="margin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
+          <property name="topMargin">
+           <number>9</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>9</number>
+          </property>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="toolButtonStart">
             <property name="text">
              <string>Start</string>
             </property>
@@ -110,7 +119,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton_2">
+           <widget class="QToolButton" name="toolButtonPause">
             <property name="text">
              <string>Pause</string>
             </property>
@@ -130,7 +139,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_10">
+           <widget class="QLabel" name="labelProcessing">
             <property name="text">
              <string>Currently processing 1 out of 65536 combinations.</string>
             </property>
@@ -165,7 +174,7 @@
            <widget class="QLabel" name="label_3">
             <property name="minimumSize">
              <size>
-              <width>42</width>
+              <width>64</width>
               <height>0</height>
              </size>
             </property>
@@ -175,7 +184,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox"/>
+           <widget class="QSpinBox" name="spinBoxGainStart"/>
           </item>
           <item>
            <widget class="QLabel" name="label_4">
@@ -185,7 +194,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_2"/>
+           <widget class="QSpinBox" name="spinBoxGainEnd"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_5">
@@ -217,13 +226,26 @@
           </property>
           <item>
            <widget class="QLabel" name="label_5">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Offset:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_3"/>
+           <widget class="QSpinBox" name="spinBoxOffsetStart">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_6">
@@ -233,7 +255,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_4"/>
+           <widget class="QSpinBox" name="spinBoxOffsetEnd"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_4">
@@ -271,7 +293,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_5"/>
+           <widget class="QSpinBox" name="spinBoxLineTime"/>
           </item>
           <item>
            <spacer name="horizontalSpacer">
@@ -315,7 +337,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_6"/>
+           <widget class="QSpinBox" name="spinBoxIntegrationTime"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_2">
@@ -346,7 +368,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="checkBoxDarkPixelAveragin">
             <property name="text">
              <string>Dark Pixel Averaging</string>
             </property>
@@ -376,7 +398,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="listView"/>
+        <widget class="QListView" name="listViewResults"/>
        </item>
       </layout>
      </widget>
@@ -409,7 +431,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="labelImagePlaceholder">
          <property name="text">
           <string/>
          </property>
@@ -431,7 +453,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>842</width>
+     <width>966</width>
      <height>25</height>
     </rect>
    </property>
