@@ -138,18 +138,40 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.assertEqual(in_box.value(), 98)
 
     def test_result_in_list_widget(self):
-        # Set a 1-iteration of the gain value and offset values
-        self.form.ui.spinBoxGainStart.setValue(1)
-        self.form.ui.spinBoxGainEnd.setValue(2)
+        # Set a 1-iteration of the offset value.
+        # Gain value is the internal range 
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
 
         # Click the scan button
         self.form.ui.toolButtonStart.click()
 
-        # Verify that 1 entry appears in the listwidget
-        tw = self.form.ui.treeWidget
+        # verify that the datamodel increases in size
+        dm = self.form.datamod
+        self.assertEqual(dm.rowCount(), 1)
+
+        # Append another scan group, verify the result size
+        self.form.ui.spinBoxOffsetEnd.setValue(15)
+        self.form.ui.toolButtonStart.click()
+        self.assertEqual(dm.rowCount(), 16)
+
+    def test_summary_display_updates(self):
+        # Set offset and gain to very short values, verify the display
+        # text updates
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
+
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(1)
+
+        lbl_text = self.form.ui.labelProcessing.text()
+
+        ref_text = "System will process 4 combinations."
+        self.assertEqual(lbl_text, ref_text)
+        
+
     
-        root = tw.invisibleRootItem()
-        self.assertEqual(root.childCount(), 1)
+
          
 class TestGainOffsetScript(unittest.TestCase):
 
