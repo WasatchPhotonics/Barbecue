@@ -133,7 +133,7 @@ class NoButtonImageDialog(plot.ImageDialog):
     """
 
     def __init__(self):
-        options=dict(show_xsection=True)
+        options=dict(show_xsection=False)
         super(NoButtonImageDialog, self).__init__(toolbar=True,
                                                   edit=True, 
                                                   options=options)
