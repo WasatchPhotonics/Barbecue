@@ -180,10 +180,25 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.form.ui.toolButtonStart.click()
         log.info("Post tool button")
 
-        self.form.ui.saveAction.activate()
-        # Click triggered loop has process events - do you need a qwait
-        # here to let the loop process?
+        # There has to be an easier way to find the cancel button
+        #bb = self.form.file_dialog
+        #parts = bb.findChildren(QtGui.QDialogButtonBox)
+        #cancel_button = parts[0].button(QtGui.QDialogButtonBox.Cancel)
+       
+        # Any of these options trigger a modal, blocking popup of the
+        # filedialog
+        #self.form.ui.actionSave.trigger()
+        #QtTest.QTest.mouseClick(self.form.ui.actionSave)
+        #QtTest.QTest.keyEvent(QtTest.QTest.Click, self.form, 
+        #                       QtCore.Qt.Key_S, QtCore.Qt.ControlModifier)
+       
+        # instead, break out the action into save dialog, which should
+        # be testable elsewhere. Or make a custom save widget that wraps
+        # the file dialog so you can add an auto-close timer or a
+        # default value. For now just ignore that portion
 
+        self.assertTrue(self.form.save_file("test_file.csv"))
+ 
         # Now look at the file, make sure it is the correct length
 
         # Make sure each line has the offset, gain, ltm, etc. header

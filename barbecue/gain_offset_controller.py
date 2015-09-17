@@ -30,6 +30,11 @@ class GainOffset(QtGui.QMainWindow):
 
         self.set_app_defaults()
         self.setup_signals()
+
+        # It's necessary to create the dialog objects ahead of time so
+        # the test scripts can click their buttons
+        self.file_dialog = QtGui.QFileDialog()
+
         self.show()
 
     def replace_widgets(self):
@@ -116,9 +121,38 @@ class GainOffset(QtGui.QMainWindow):
         spoe.valueChanged.connect(self.update_summary)
       
         # Open/Save results
-        self.ui.actionOpen.triggered.connect(self.open_dialog)
-        self.ui.actionSave.triggered.connect(self.save_dialog)
+        self.ui.actionOpen.triggered.connect(self.open_process)
+        self.ui.actionSave.triggered.connect(self.save_process)
+
+    def open_process(self):
+        """ Get a filename to load.
+        """
+        pass
+
+    def save_process(self):
+        """ Select a filename to save the current results.
+        """
+        file_name = self.file_dialog.getOpenFileName()
+        self.save_file(file_name)
+
+    def save_file(self, file_name):
+        """ Write the current contents of the datamodel displayed in the
+        tree widget to disk.
+        """ 
+
+        csv_file = open(file_name, "wb")
+
+        position = 0
+        while position < self.datamod.rowCount():
+
+            item = self.datamod.item(position, 0)
+            log.info("Write item: %s" % item)
+            csv_file.write(str(item.results))
+            position += 1
+
+        csv_file.close()
  
+
     def update_summary(self):
         """ Create a summary text showing how many iterations will be
         processed.
