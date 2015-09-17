@@ -53,6 +53,16 @@ class Test(unittest.TestCase):
         self.assertEqual(last_result.offset, 10)
         self.assertEqual(len(last_result.data), 2048)
 
+    def test_exam_creation(self):
+        # Verify the gain/offset exam creates a unique folder for itself
+        gain_min = 1
+        gain_max = 2
+        offset_min = 1
+        offset_max = 2
+        #exam = self.model.exam(gain_min, gain_max, offset_min, offset_max)
+ 
+        # Run a set of scans, verify they are all written to a file
+    
 if __name__ == "__main__":
     unittest.main()
     

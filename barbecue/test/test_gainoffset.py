@@ -12,6 +12,8 @@ nosetests --with-coverage --cover-package=barbecue
 """
 
 import os
+import sys
+import logging
 import unittest
 
 from PyQt4 import QtGui, QtTest, QtCore
@@ -22,6 +24,13 @@ from barbecue import GainOffset
 # All the classes below will reuese this qapplication
 app = QtGui.QApplication([])
 
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+
+strm = logging.StreamHandler(sys.stderr)
+frmt = logging.Formatter("%(name)s - %(levelname)s %(message)s")
+strm.setFormatter(frmt)
+log.addHandler(strm)
 
 class TestGainOffsetControllerView(unittest.TestCase):
 
@@ -128,6 +137,19 @@ class TestGainOffsetControllerView(unittest.TestCase):
         in_box.setValue(105)
         self.assertEqual(in_box.value(), 98)
 
+    def test_result_in_list_widget(self):
+        # Set a 1-iteration of the gain value and offset values
+        self.form.ui.spinBoxGainStart.setValue(1)
+        self.form.ui.spinBoxGainEnd.setValue(2)
+
+        # Click the scan button
+        self.form.ui.toolButtonStart.click()
+
+        # Verify that 1 entry appears in the listwidget
+        tw = self.form.ui.treeWidget
+    
+        root = tw.invisibleRootItem()
+        self.assertEqual(root.childCount(), 1)
          
 class TestGainOffsetScript(unittest.TestCase):
 

@@ -398,7 +398,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="listViewResults"/>
+        <widget class="QTreeWidget" name="treeWidget">
+         <attribute name="headerVisible">
+          <bool>true</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -460,7 +469,7 @@
      <x>0</x>
      <y>0</y>
      <width>1070</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

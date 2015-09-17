@@ -107,6 +107,23 @@ class GainOffset(QtGui.QMainWindow):
         splt = self.ui.spinBoxLineTime
         splt.valueChanged.connect(self.move_linetime)
 
+        self.ui.toolButtonStart.clicked.connect(self.start)
+
+    def start(self):
+        """ For all of the iterations specified in the gain and offset
+        controls, run a single scan, and add the results to the tree 
+        widget.
+        """
+        log.info("Start scan")
+
+        gain = self.ui.spinBoxGainStart.value()
+        stop_gain = self.ui.spinBoxGainEnd.value()
+
+        while gain < stop_gain:
+            log.info("Process: %s" % gain)
+            gain += 1
+
+
     def move_linetime(self, event):
         """ Change the integration time range to make sure the user
         cannot set it more than 2 - line time.
