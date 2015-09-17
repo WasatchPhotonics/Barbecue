@@ -7,6 +7,27 @@ from wasatchcameralink import simulation
 
 log = logging.getLogger(__name__)
 
+class ScanGroup(object):
+    """ Given a range of gains, create a data model for each, provide an
+    interface for saving the data to disk in csv.
+    """
+    def __init__(self):
+        super(ScanGroup, self).__init__()
+        log.info("scangroup created")
+        self.model = Model()
+ 
+    def assign(self, device_type):
+        """ pass-through the device assignment type.
+        """
+        return self.model.assign(device_type)
+       
+    def offset_range(self, start, end):
+        """ initialize the range to be scanned.
+        """
+        self.offset_start = start
+        self.offset_end = end
+
+
 class Model(object):
     """ Encapsulates the acquisition of data from a spectrometer, along
     with storage and results data structure.

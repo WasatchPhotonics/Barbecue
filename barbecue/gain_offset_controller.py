@@ -171,6 +171,7 @@ class GainOffset(QtGui.QMainWindow):
                 if not result:
                     self.log.critical("Scan failure")
 
+                QtGui.qApp.processEvents()
                 gain += 1
 
             offs_it = QtGui.QStandardItem(str(offset))
@@ -178,7 +179,6 @@ class GainOffset(QtGui.QMainWindow):
             gain_it = QtGui.QStandardItem("Gain 0-255")
 
             self.datamod.appendRow([offs_it, gain_it])
-            QtGui.qApp.processEvents()
 
             offset += 1
 

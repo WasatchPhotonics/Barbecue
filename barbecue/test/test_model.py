@@ -58,7 +58,7 @@ class Test(unittest.TestCase):
         # is overwritten with the contents of the scan. ScanGroup class
         # encapsulates this functionality
 
-        sg = ScanGroup()
+        sg = model.ScanGroup()
         self.assertTrue(sg.assign("simulation"))
         self.assertTrue(sg.offset_range(0, 1))
 
