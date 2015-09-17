@@ -35,7 +35,35 @@ class GainOffset(QtGui.QMainWindow):
 #        self.close_timer = QtCore.QTimer()
 #        self.close_timer.timeout.connect(self.closeEvent)
 #
-#        self.set_app_defaults()
-
+        self.set_app_defaults()
+        self.setup_signals()
         self.show()
 
+    def set_app_defaults(self):
+        """ Setup preliminary values of all widgets.
+        """
+        self.ui.spinBoxGainStart.setMinimum(0)
+        self.ui.spinBoxGainStart.setMaximum(254)
+        self.ui.spinBoxGainStart.setValue(0)
+
+        self.ui.spinBoxGainEnd.setMinimum(0)
+        self.ui.spinBoxGainEnd.setMaximum(255)
+        self.ui.spinBoxGainEnd.setValue(255)
+
+        self.ui.spinBoxOffsetStart.setMinimum(0)
+        self.ui.spinBoxOffsetStart.setMaximum(255)
+        self.ui.spinBoxOffsetStart.setValue(0)
+
+        self.ui.spinBoxOffsetEnd.setMinimum(0)
+        self.ui.spinBoxOffsetEnd.setMaximum(255)
+        self.ui.spinBoxOffsetEnd.setValue(255)
+
+    def setup_signals(self):
+        """ Configure widget signals.
+        """
+        spgs = self.ui.spinBoxGainStart
+        spgs.valueChanged.connect(self.move_gain_range)
+
+    def move_gain_range(self, event):
+        gs_value = self.ui.spinBoxGainStart.value()
+        self.ui.spinBoxGainEnd.setMinimum(gs_value + 1)

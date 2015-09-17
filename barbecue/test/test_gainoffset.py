@@ -30,14 +30,40 @@ class TestGainOffsetControllerView(unittest.TestCase):
 
     def tearDown(self):
         app.closeAllWindows()
-       
-    def test_gain_start_and_end_move_together(self):
-        # Verify that signals have been setup that link gain start can
-        # never be before the gain end, limits are in place, etc.
+      
+    def test_application_defaults(self):
+        # Verify controller sets the start parameters
         gain_start = self.form.ui.spinBoxGainStart.value()
         gain_stop  = self.form.ui.spinBoxGainEnd.value()
         self.assertEqual(gain_start, 0)
         self.assertEqual(gain_stop, 255)
+
+        offset_start = self.form.ui.spinBoxOffsetStart.value()
+        offset_stop  = self.form.ui.spinBoxOffsetEnd.value()
+        self.assertEqual(offset_start, 0)
+        self.assertEqual(offset_stop, 255)
+ 
+    def test_gain_start_and_end_move_together(self):
+        # Verify that signals have been setup that link gain start can
+        # never be before the gain end, limits are in place, etc.
+
+        gain_start = self.form.ui.spinBoxGainStart
+        gain_stop  = self.form.ui.spinBoxGainEnd
+
+        # Move the start to 100, make sure end doesn't move
+        gain_start.setValue(100)
+        self.assertEqual(gain_stop.value(), 255)
+
+        # Move end to 99, make sure it moves to the minimum
+        gain_stop.setValue(99)
+        self.assertEqual(gain_stop.value(), 101)
+
+        # Move start to 98, move end to 99, make sure the minimum is
+        # always 1 more than the start
+        gain_start.setValue(98)
+        gain_stop.setValue(99)
+        self.assertEqual(gain_start.value(), 98)
+        self.assertEqual(gain_stop.value(), 99)
        
 class TestGainOffsetScript(unittest.TestCase):
 

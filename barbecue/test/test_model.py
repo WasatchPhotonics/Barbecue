@@ -33,9 +33,7 @@ class Test(unittest.TestCase):
         
 
     def test_scan_result(self):
-
         scan = self.model.scan
-
         # Attempt to scan before device assignment, fail
         self.assertRaises(ValueError, scan, gain=None, offset=None)
 
