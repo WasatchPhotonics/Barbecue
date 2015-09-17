@@ -54,14 +54,20 @@ class Test(unittest.TestCase):
         self.assertEqual(len(last_result.data), 2048)
 
     def test_exam_creation(self):
-        # Verify the gain/offset exam creates a unique folder for itself
-        gain_min = 1
-        gain_max = 2
-        offset_min = 1
-        offset_max = 2
-        #exam = self.model.exam(gain_min, gain_max, offset_min, offset_max)
- 
-        # Run a set of scans, verify they are all written to a file
+        # Every time a new scan is created, the temporary working file
+        # is overwritten with the contents of the scan. ScanGroup class
+        # encapsulates this functionality
+
+        sg = ScanGroup()
+        self.assertTrue(sg.assign("simulation"))
+        self.assertTrue(sg.offset_range(0, 1))
+
+        self.assertTrue(sg.process())
+
+        # Now look at the file, make sure it is the correct length
+
+        # Make sure each line has the offset, gain, ltm, etc. header
+        
     
 if __name__ == "__main__":
     unittest.main()

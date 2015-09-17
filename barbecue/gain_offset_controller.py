@@ -115,7 +115,7 @@ class GainOffset(QtGui.QMainWindow):
 
         spos = self.ui.spinBoxOffsetStart
         spos.valueChanged.connect(self.move_offset_range)
-        spgs.valueChanged.connect(self.update_summary)
+        spos.valueChanged.connect(self.update_summary)
 
         splt = self.ui.spinBoxLineTime
         splt.valueChanged.connect(self.move_linetime)
@@ -133,6 +133,7 @@ class GainOffset(QtGui.QMainWindow):
         """ Create a summary text showing how many iterations will be
         processed.
         """
+        log.info("update summary")
         offset_range = self.ui.spinBoxOffsetEnd.value() - \
                        self.ui.spinBoxOffsetStart.value() + 1
 

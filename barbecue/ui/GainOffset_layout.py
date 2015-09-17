@@ -211,7 +211,13 @@ class Ui_MainWindow(object):
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1070, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
         MainWindow.setMenuBar(self.menubar)
+        self.actionLoad = QtGui.QAction(MainWindow)
+        self.actionLoad.setObjectName(_fromUtf8("actionLoad"))
+        self.menuFile.addAction(self.actionLoad)
+        self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -230,5 +236,7 @@ class Ui_MainWindow(object):
         self.label_8.setText(_translate("MainWindow", "Int. time:", None))
         self.checkBoxDarkPixelAveragin.setText(_translate("MainWindow", "Dark Pixel Averaging", None))
         self.label_9.setText(_translate("MainWindow", "Processing results:", None))
+        self.menuFile.setTitle(_translate("MainWindow", "File", None))
+        self.actionLoad.setText(_translate("MainWindow", "Load", None))
 
 import bbq_resources_rc
