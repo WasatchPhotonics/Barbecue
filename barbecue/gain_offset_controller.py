@@ -46,17 +46,25 @@ class GainOffset(QtGui.QMainWindow):
         self.ui.spinBoxGainStart.setMaximum(254)
         self.ui.spinBoxGainStart.setValue(0)
 
-        self.ui.spinBoxGainEnd.setMinimum(0)
+        self.ui.spinBoxGainEnd.setMinimum(1)
         self.ui.spinBoxGainEnd.setMaximum(255)
         self.ui.spinBoxGainEnd.setValue(255)
 
         self.ui.spinBoxOffsetStart.setMinimum(0)
-        self.ui.spinBoxOffsetStart.setMaximum(255)
+        self.ui.spinBoxOffsetStart.setMaximum(254)
         self.ui.spinBoxOffsetStart.setValue(0)
 
-        self.ui.spinBoxOffsetEnd.setMinimum(0)
+        self.ui.spinBoxOffsetEnd.setMinimum(1)
         self.ui.spinBoxOffsetEnd.setMaximum(255)
         self.ui.spinBoxOffsetEnd.setValue(255)
+
+        self.ui.spinBoxLineTime.setMinimum(25)
+        self.ui.spinBoxLineTime.setMaximum(1000)
+        self.ui.spinBoxLineTime.setValue(100)
+
+        self.ui.spinBoxIntegrationTime.setMinimum(2)
+        self.ui.spinBoxIntegrationTime.setMaximum(98)
+        self.ui.spinBoxIntegrationTime.setValue(98)
 
     def setup_signals(self):
         """ Configure widget signals.
@@ -64,6 +72,29 @@ class GainOffset(QtGui.QMainWindow):
         spgs = self.ui.spinBoxGainStart
         spgs.valueChanged.connect(self.move_gain_range)
 
+        spos = self.ui.spinBoxOffsetStart
+        spos.valueChanged.connect(self.move_offset_range)
+
+        splt = self.ui.spinBoxLineTime
+        splt.valueChanged.connect(self.move_linetime)
+
+    def move_linetime(self, event):
+        """ Change the integration time range to make sure the user
+        cannot set it more than 2 - line time.
+        """
+        lt_value = self.ui.spinBoxLineTime.value()
+        self.ui.spinBoxIntegrationTime.setMaximum(lt_value - 2) 
+
     def move_gain_range(self, event):
+        """ Make sure the end value is always at least 1 more than the
+        start value.
+        """
         gs_value = self.ui.spinBoxGainStart.value()
         self.ui.spinBoxGainEnd.setMinimum(gs_value + 1)
+
+    def move_offset_range(self, event):
+        """ Make sure the end value is always at least 1 more than the
+        start value.
+        """
+        os_value = self.ui.spinBoxOffsetStart.value()
+        self.ui.spinBoxOffsetEnd.setMinimum(os_value + 1)

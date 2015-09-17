@@ -42,6 +42,13 @@ class TestGainOffsetControllerView(unittest.TestCase):
         offset_stop  = self.form.ui.spinBoxOffsetEnd.value()
         self.assertEqual(offset_start, 0)
         self.assertEqual(offset_stop, 255)
+
+        lt_box = self.form.ui.spinBoxLineTime
+        self.assertEqual(lt_box.value(), 100)
+
+        in_box = self.form.ui.spinBoxIntegrationTime
+        self.assertEqual(in_box.value(), 98)
+
  
     def test_gain_start_and_end_move_together(self):
         # Verify that signals have been setup that link gain start can
@@ -64,7 +71,59 @@ class TestGainOffsetControllerView(unittest.TestCase):
         gain_stop.setValue(99)
         self.assertEqual(gain_start.value(), 98)
         self.assertEqual(gain_stop.value(), 99)
-       
+      
+    def test_offset_start_and_end_move_together(self):
+        # Verify that signals have been setup that link gain start can
+        # never be before the gain end, limits are in place, etc.
+
+        offset_start = self.form.ui.spinBoxOffsetStart
+        offset_stop  = self.form.ui.spinBoxOffsetEnd
+
+        # Move the start to 100, make sure end doesn't move
+        offset_start.setValue(100)
+        self.assertEqual(offset_stop.value(), 255)
+
+        # Move end to 99, make sure it moves to the minimum
+        offset_stop.setValue(99)
+        self.assertEqual(offset_stop.value(), 101)
+
+        # Move start to 98, move end to 99, make sure the minimum is
+        # always 1 more than the start
+        offset_start.setValue(98)
+        offset_stop.setValue(99)
+        self.assertEqual(offset_start.value(), 98)
+        self.assertEqual(offset_stop.value(), 99)
+
+    def test_line_time_integration_time_move_together(self):
+        lt_box = self.form.ui.spinBoxLineTime
+        in_box = self.form.ui.spinBoxIntegrationTime
+
+        # move the integration time to 90, make sure the line time does
+        # not move
+        in_box.setValue(90)
+        self.assertEqual(in_box.value(), 90)
+        self.assertEqual(lt_box.value(), 100)
+
+        # Move the line time to 80, make sure the integration time drops
+        # too 
+        lt_box.setValue(80)
+        self.assertEqual(lt_box.value(), 80)
+        self.assertEqual(in_box.value(), 78)
+
+        # Move line time back up, make sure integration time does not
+        # change
+        lt_box.setValue(100)
+        self.assertEqual(lt_box.value(), 100)
+        self.assertEqual(in_box.value(), 78)
+
+        # Attempt to set an integration time higher than 2-line time,
+        # expect it does not move
+        in_box.setValue(99)
+        self.assertEqual(in_box.value(), 98)
+        in_box.setValue(105)
+        self.assertEqual(in_box.value(), 98)
+
+         
 class TestGainOffsetScript(unittest.TestCase):
 
     def tearDown(self):
