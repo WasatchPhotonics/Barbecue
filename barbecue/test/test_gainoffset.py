@@ -49,6 +49,11 @@ class TestGainOffsetControllerView(unittest.TestCase):
         in_box = self.form.ui.spinBoxIntegrationTime
         self.assertEqual(in_box.value(), 98)
 
+    def test_image_widget_populated(self):
+        # Make sure the image widget is available at a useful size
+        imgd = self.form.ui.image_dialog
+        self.assertGreater(imgd.width(), 100)
+        self.assertGreater(imgd.height(), 100)
  
     def test_gain_start_and_end_move_together(self):
         # Verify that signals have been setup that link gain start can

@@ -1,8 +1,13 @@
 """ Gain/Offset walkthrough with live visualization.
 """
+
+import numpy
 import logging
 
 from PyQt4 import QtGui, QtCore
+
+from guiqwt import plot
+from guiqwt import builder
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +29,7 @@ class GainOffset(QtGui.QMainWindow):
         #self.qss_string = utils.load_style_sheet("qdarkstyle.css")
         #self.setStyleSheet(self.qss_string)
 
-        #self.replace_widgets()
+        self.replace_widgets()
 
         # Align the image with the curve above it
         #self.main_image_dialog.setContentsMargins(17, 0, 0, 0)
@@ -38,6 +43,30 @@ class GainOffset(QtGui.QMainWindow):
         self.set_app_defaults()
         self.setup_signals()
         self.show()
+
+    def replace_widgets(self):
+        """ From: http://stackoverflow.com/questions/4625102/\
+            how-to-replace-a-widget-with-another-using-qt
+        Replace the current placeholders from qt designer with the
+        custom widgets.
+        """
+
+        # Create the new widget
+        #options=dict(show_xsection=True, show_ysection=True,
+                     #show_contrast=True)
+        #self.ui.image_dialog = plot.ImageDialog(toolbar=True, edit=True,
+                                                #options=options)
+        self.ui.image_dialog = NoButtonImageDialog()
+
+        # Remove the placeholder widget from the layout
+        liph = self.ui.labelImagePlaceholder
+        vli = self.ui.verticalLayout
+        vli.removeWidget(liph)
+        liph.close()
+
+        # Add the new widget to the layout
+        vli.insertWidget(0, self.ui.image_dialog)
+        vli.update()
 
     def set_app_defaults(self):
         """ Setup preliminary values of all widgets.
@@ -98,3 +127,43 @@ class GainOffset(QtGui.QMainWindow):
         """
         os_value = self.ui.spinBoxOffsetStart.value()
         self.ui.spinBoxOffsetEnd.setMinimum(os_value + 1)
+
+class NoButtonImageDialog(plot.ImageDialog):
+    """ An guiqwt imagedialog with the ok/cancel buttons hidden.
+    """
+
+    def __init__(self):
+        options=dict(show_xsection=True)
+        super(NoButtonImageDialog, self).__init__(toolbar=True,
+                                                  edit=True, 
+                                                  options=options)
+
+        self.create_image()
+
+        # Don't show the right side colormap axis
+        local_plot = self.get_plot()
+        local_plot.enableAxis(local_plot.colormap_axis, False)
+
+    def create_image(self):
+        """ Create a 2D test pattern image, apply it to the view area.
+        """
+        base_data = range(256)
+
+        position = 0
+        while position < len(base_data):
+            base_data[position] = numpy.linspace(0, 100, 2048)
+            position += 1
+
+        new_data = numpy.array(base_data).astype(float)
+
+        bmi = builder.make.image
+        self.image = bmi(new_data, colormap="gist_earth")
+        local_plot = self.get_plot()
+        local_plot.add_item(self.image)
+        local_plot.do_autoscale()
+
+    def install_button_layout(self):
+        """ Do not show the ok, cancel buttons, yet retain the right
+        click editing capabilities.
+        """
+        pass
