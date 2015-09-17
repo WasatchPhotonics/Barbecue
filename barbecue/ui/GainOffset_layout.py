@@ -214,9 +214,12 @@ class Ui_MainWindow(object):
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
         MainWindow.setMenuBar(self.menubar)
-        self.actionLoad = QtGui.QAction(MainWindow)
-        self.actionLoad.setObjectName(_fromUtf8("actionLoad"))
-        self.menuFile.addAction(self.actionLoad)
+        self.actionOpen = QtGui.QAction(MainWindow)
+        self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
+        self.actionSave = QtGui.QAction(MainWindow)
+        self.actionSave.setObjectName(_fromUtf8("actionSave"))
+        self.menuFile.addAction(self.actionOpen)
+        self.menuFile.addAction(self.actionSave)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -237,6 +240,10 @@ class Ui_MainWindow(object):
         self.checkBoxDarkPixelAveragin.setText(_translate("MainWindow", "Dark Pixel Averaging", None))
         self.label_9.setText(_translate("MainWindow", "Processing results:", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
-        self.actionLoad.setText(_translate("MainWindow", "Load", None))
+        self.actionOpen.setText(_translate("MainWindow", "Open", None))
+        self.actionOpen.setToolTip(_translate("MainWindow", "Open", None))
+        self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+P", None))
+        self.actionSave.setText(_translate("MainWindow", "Save", None))
+        self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S", None))
 
 import bbq_resources_rc

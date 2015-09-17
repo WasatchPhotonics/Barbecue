@@ -53,21 +53,6 @@ class Test(unittest.TestCase):
         self.assertEqual(last_result.offset, 10)
         self.assertEqual(len(last_result.data), 2048)
 
-    def test_exam_creation(self):
-        # Every time a new scan is created, the temporary working file
-        # is overwritten with the contents of the scan. ScanGroup class
-        # encapsulates this functionality
-
-        sg = model.ScanGroup()
-        self.assertTrue(sg.assign("simulation"))
-        self.assertTrue(sg.offset_range(0, 1))
-
-        self.assertTrue(sg.process())
-
-        # Now look at the file, make sure it is the correct length
-
-        # Make sure each line has the offset, gain, ltm, etc. header
-        
     
 if __name__ == "__main__":
     unittest.main()

@@ -164,12 +164,30 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.form.ui.spinBoxGainStart.setValue(0)
         self.form.ui.spinBoxGainEnd.setValue(1)
 
-        lbl_text = self.form.ui.labelProcessing.text()
+        ref_txt = "System will process 4 combinations."
+        lbl_txt = self.form.ui.labelProcessing.text()
+        self.assertEqual(ref_txt, lbl_txt)
 
-        ref_text = "System will process 4 combinations."
-        self.assertEqual(lbl_text, ref_text)
+    def test_save_results(self):
+        # Create a small scan range, make sure the file is written to
+        # disk
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
+
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(1)
+
+        self.form.ui.toolButtonStart.click()
+        log.info("Post tool button")
+
+        self.form.ui.saveAction.activate()
+        # Click triggered loop has process events - do you need a qwait
+        # here to let the loop process?
+
+        # Now look at the file, make sure it is the correct length
+
+        # Make sure each line has the offset, gain, ltm, etc. header
         
-
     
 
          

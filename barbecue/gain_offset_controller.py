@@ -26,22 +26,8 @@ class GainOffset(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.setGeometry(450, 350, 1080, 600)
 
-        # Make sure the system wide style sheet is applied before the
-        # curve and image widgets style sheets overwrite
-        #self.qss_string = utils.load_style_sheet("qdarkstyle.css")
-        #self.setStyleSheet(self.qss_string)
-
         self.replace_widgets()
 
-        # Align the image with the curve above it
-        #self.main_image_dialog.setContentsMargins(17, 0, 0, 0)
-#
-#        self.add_manager_and_tools()
-#    
-#        # Timer to auto-close the application
-#        self.close_timer = QtCore.QTimer()
-#        self.close_timer.timeout.connect(self.closeEvent)
-#
         self.set_app_defaults()
         self.setup_signals()
         self.show()
@@ -128,7 +114,11 @@ class GainOffset(QtGui.QMainWindow):
 
         spoe = self.ui.spinBoxOffsetEnd
         spoe.valueChanged.connect(self.update_summary)
-       
+      
+        # Open/Save results
+        self.ui.actionOpen.triggered.connect(self.open_dialog)
+        self.ui.actionSave.triggered.connect(self.save_dialog)
+ 
     def update_summary(self):
         """ Create a summary text showing how many iterations will be
         processed.
@@ -181,6 +171,13 @@ class GainOffset(QtGui.QMainWindow):
             self.datamod.appendRow([offs_it, gain_it])
 
             offset += 1
+
+    def write_file(self, filename):
+        """ Read every entry from the current data model, write it out
+        to the temporary disk file.
+        """
+        log.info("start write to disk")
+        #self.
 
 
     def move_linetime(self, event):
