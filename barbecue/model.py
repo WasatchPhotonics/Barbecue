@@ -49,7 +49,9 @@ class Model(object):
         result = dev.setup_pipe()
         log.info("Setup result is: %s" % result)
 
+        result = dev.set_gain(gain)
         result, data = dev.grab_pipe()
+
         store_result = Result(gain, offset, linetime, integration, data)
         self.results.append(store_result)
         result = dev.close_pipe()
