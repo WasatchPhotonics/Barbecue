@@ -171,7 +171,6 @@ class GainOffset(QtGui.QMainWindow):
         """
         head_str = "Offset,Gain,Line Time,Integration Time,Data\n"
         csv_file.write(head_str)
-         
 
     def update_summary(self):
         """ Create a summary text showing how many iterations will be
