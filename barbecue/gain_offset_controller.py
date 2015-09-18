@@ -162,6 +162,8 @@ class GainOffset(QtGui.QMainWindow):
         for result in item.results:
             csv_file.write("%s," % result.offset)
             csv_file.write("%s," % result.gain)
+            csv_file.write("%s," % result.linetime)
+            csv_file.write("%s," % result.integration)
             for pixel in result.data:
                 csv_file.write("%s," % pixel)
             csv_file.write("\n")
@@ -203,6 +205,9 @@ class GainOffset(QtGui.QMainWindow):
         orig_offset_end = self.ui.spinBoxOffsetEnd.value()
         offset = orig_offset_start
 
+        linetime = self.ui.spinBoxLineTime.value()
+        integration = self.ui.spinBoxIntegrationTime.value()
+
         while offset <= orig_offset_end:
             log.info("Process offset: %s" % offset)
        
@@ -210,7 +215,8 @@ class GainOffset(QtGui.QMainWindow):
             gain_group = []
             while gain < orig_gain_end:
                 #log.debug("Gain: %s" % gain)
-                result = self.model.scan(gain, offset)
+                result = self.model.scan(gain, offset, linetime,
+                                         integration)
                 if not result:
                     self.log.critical("Scan failure")
 

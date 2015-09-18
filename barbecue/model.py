@@ -29,7 +29,10 @@ class Model(object):
         self.device = device_type
         return True
 
-    def scan(self, gain, offset):
+    def scan(self, gain, offset, linetime, integration):
+        """ Connect to a device, apply the settings, collect one line of
+        data, store the results and exit.
+        """
         if self.device == None:
             raise(ValueError, "Must assign device first")
 
@@ -41,15 +44,18 @@ class Model(object):
         log.info("Setup result is: %s" % result)
 
         result, data = self.device.grab_pipe()
-        store_result = Result(gain, offset, data)
+        store_result = Result(gain, offset, linetime, integration, data)
         self.results.append(store_result)
         return True
             
 class Result(object):
     """ holds stored data and device settings from a given scan.
     """
-    def __init__(self, gain=-1, offset=-1, data=[]):
+    def __init__(self, gain=-1, offset=-1, linetime=-1, integration=-1,
+                 data=[]):
         super(Result, self).__init__()
         self.gain = gain
         self.offset = offset
+        self.linetime = linetime
+        self.integration = integration
         self.data = data
