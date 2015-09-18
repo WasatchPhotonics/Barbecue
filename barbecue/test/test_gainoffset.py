@@ -199,7 +199,6 @@ class TestGainOffsetControllerView(unittest.TestCase):
 
         self.assertTrue(self.form.save_file("test_file.csv"))
 
- 
         # Now look at the file, make sure it is the correct length
         self.assertTrue(self.file_lines(), 2)
 
@@ -242,7 +241,30 @@ class TestGainOffsetControllerView(unittest.TestCase):
             count += 1
         return count 
 
-         
+    def test_build_image_from_result(self):
+        # Build a very small scan group, run it
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(1)
+        self.form.ui.toolButtonStart.click()
+
+        # Store the first data values
+        plot = self.form.ui.image_dialog.get_plot()
+        start_data = plot.get_default_item().get_data(0,0)
+
+        # Click the first entry in the tree widget, verify that the
+        # image data changes
+        item_position = QtCore.QPoint(40,40)
+        QtTest.QTest.mouseClick(self.form.ui.treeView, 
+            QtCore.Qt.LeftButton, QtCore.Qt.NoModifier, item_position)
+
+
+        end_data = plot.get_default_item().get_data(0,0)
+        self.assertNotEqual(start_data, end_data)
+
+        
+     
 class TestGainOffsetScript(unittest.TestCase):
 
     def tearDown(self):

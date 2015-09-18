@@ -45,10 +45,6 @@ class GainOffset(QtGui.QMainWindow):
         """
 
         # Create the new widget
-        #options=dict(show_xsection=True, show_ysection=True,
-                     #show_contrast=True)
-        #self.ui.image_dialog = plot.ImageDialog(toolbar=True, edit=True,
-                                                #options=options)
         self.ui.image_dialog = NoButtonImageDialog()
 
         # Remove the placeholder widget from the layout
@@ -123,6 +119,15 @@ class GainOffset(QtGui.QMainWindow):
         # Open/Save results
         self.ui.actionOpen.triggered.connect(self.open_process)
         self.ui.actionSave.triggered.connect(self.save_process)
+
+        # Tree list widget updates image on click
+        self.ui.treeView.clicked.connect(self.update_image)
+
+    def update_image(self):
+        """ Based on the tree view selected datamodel item, build an
+        image in the dialog.
+        """
+        log.info("Update image")
 
     def open_process(self):
         """ Get a filename to load.
