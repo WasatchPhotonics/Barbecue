@@ -142,16 +142,36 @@ class GainOffset(QtGui.QMainWindow):
 
         csv_file = open(file_name, "wb")
 
+        self.write_header(csv_file)
+
         position = 0
         while position < self.datamod.rowCount():
-
+            
             item = self.datamod.item(position, 0)
             log.info("Write item: %s" % item)
-            csv_file.write(str(item.results))
+
+            self.write_results(csv_file, item)            
             position += 1
 
         csv_file.close()
- 
+        return True
+
+    def write_results(self, csv_file, item):
+        """ Print the contents of the datamodel item to disk.
+        """
+        for result in item.results:
+            csv_file.write("%s," % result.offset)
+            csv_file.write("%s," % result.gain)
+            for pixel in result.data:
+                csv_file.write("%s," % pixel)
+            csv_file.write("\n")
+
+    def write_header(self, csv_file):
+        """ write the csv file format header to the passed in file.
+        """
+        head_str = "Offset,Gain,Line Time,Integration Time,Data\n"
+        csv_file.write(head_str)
+         
 
     def update_summary(self):
         """ Create a summary text showing how many iterations will be

@@ -198,12 +198,49 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # default value. For now just ignore that portion
 
         self.assertTrue(self.form.save_file("test_file.csv"))
+
  
         # Now look at the file, make sure it is the correct length
+        self.assertTrue(self.file_lines(), 2)
 
-        # Make sure each line has the offset, gain, ltm, etc. header
+        # Make sure header is at the top of the file
+        file_str = self.get_header()
+        head_str = "Offset,Gain,Line Time,Integration Time,Data\n"
+        self.assertEqual(file_str, head_str)
+
+        # Make sure first line matches set values of gain/offset, ltm,
+        # etc.
+        first_line = self.get_line(1)
+        first_str = "0,0,100,98"
+
+        self.assertEqual(first_line[0:10], first_str)
         
-    
+    def get_line(self, line_num, name="test_file.csv"):
+        """ Helper function to get specific line of file.
+        """
+        my_file = open(name)
+        count = 0
+        for line in my_file.readlines():
+            if count == line_num:
+                return line
+            count += 1
+ 
+    def get_header(self, name="test_file.csv"):
+        """ Helper function to return header of csv file.
+        """
+        my_file = open(name)
+        return my_file.readline()
+
+         
+   
+    def file_lines(self, name="test_file.csv"):
+        """ helper function to return number of liens in the file
+        """
+        my_file = open(name)
+        count = 0
+        for line in my_file.readlines():
+            count += 1
+        return count 
 
          
 class TestGainOffsetScript(unittest.TestCase):
