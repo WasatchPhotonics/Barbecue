@@ -242,9 +242,10 @@ class TestGainOffsetControllerView(unittest.TestCase):
         return count 
 
     def test_build_image_from_result(self):
-        # Build a very small scan group, run it
+        # Build a small scan group, run it. Make it cover the whole
+        # widget area so the cilck below can just be in the middle
         self.form.ui.spinBoxOffsetStart.setValue(0)
-        self.form.ui.spinBoxOffsetEnd.setValue(1)
+        self.form.ui.spinBoxOffsetEnd.setValue(11)
         self.form.ui.spinBoxGainStart.setValue(0)
         self.form.ui.spinBoxGainEnd.setValue(1)
         self.form.ui.toolButtonStart.click()
@@ -255,9 +256,13 @@ class TestGainOffsetControllerView(unittest.TestCase):
 
         # Click the first entry in the tree widget, verify that the
         # image data changes
-        item_position = QtCore.QPoint(40,40)
-        QtTest.QTest.mouseClick(self.form.ui.treeView, 
-            QtCore.Qt.LeftButton, QtCore.Qt.NoModifier, item_position)
+
+        # Why do I have to specify application level coordinates, get
+        # teh child, then click the button? If you do mouseclick on the
+        # treeview widget directly it does nothing.
+        treeview_pos = QtCore.QPoint(140, 500)
+        child = self.form.childAt(treeview_pos)
+        QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton)
 
 
         end_data = plot.get_default_item().get_data(0,0)

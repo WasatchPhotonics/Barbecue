@@ -23,7 +23,8 @@ class Model(object):
         if device_type == None:
             raise(ValueError, "specify a device type")
 
-        if device_type != "simulation":
+        if device_type != "simulation" and \
+           device_type != "single":
             raise(ValueError, "specify a valid device type")
         
         self.device = device_type
@@ -39,13 +40,19 @@ class Model(object):
         if gain == None or offset == None:
             raise(ValueError, "must specify gain, offset")
 
-        self.device = simulation.SimulatedSpectraDevice()
-        result = self.device.setup_pipe()
+        if self.device == "simulation":
+            dev = simulation.SimulatedSpectraDevice()
+
+        elif self.device == "single":
+            dev = simulation.SimulatedCobraSLED()
+
+        result = dev.setup_pipe()
         log.info("Setup result is: %s" % result)
 
-        result, data = self.device.grab_pipe()
+        result, data = dev.grab_pipe()
         store_result = Result(gain, offset, linetime, integration, data)
         self.results.append(store_result)
+        result = dev.close_pipe()
         return True
             
 class Result(object):

@@ -127,7 +127,60 @@ class GainOffset(QtGui.QMainWindow):
         """ Based on the tree view selected datamodel item, build an
         image in the dialog.
         """
-        log.info("Update image")
+        #log.info("Update image")
+        # Get the currently selected item
+        idx = self.ui.treeView.selectedIndexes()
+        log.info("Clicked: %s" % idx)
+
+        item = self.datamod.item(idx[0].row(), idx[0].column())
+        #log.info("item: %s" % item.results)
+
+        self.results_to_image(item)
+
+    def results_to_image(self, item):
+        """ given an item from the datamodel that has results of gain
+        0-255, construct a numpy array and assign that to the image.
+        """
+        src_data = []
+        for gain_row in item.results:
+            src_data.append(gain_row.data)
+
+        log.info("How many rows: %s" % len(src_data))
+        img_data = range(len(src_data))
+
+        position = 0
+        while position < len(img_data):
+            img_data[position] = src_data[position]
+            position += 1
+
+         
+        new_data = numpy.array(img_data).astype(float)
+        
+        plot = self.ui.image_dialog.get_plot()
+        plot.get_default_item().set_data(new_data)
+
+        plot.replot()
+ 
+        #self.image_data.append(data)
+        #if len(self.image_data) > self.image_height:
+            #self.image_data = self.image_data[1:]
+#
+        #img_data = range(len(self.image_data))
+#
+        #position = 0
+        #while position < len(img_data):
+            #img_data[position] = self.image_data[position]
+            #position += 1
+#
+        #new_data = numpy.array(img_data).astype(float)
+#
+        #mid = self.main_image_dialog
+        #mid.image.set_data(new_data)
+
+        # If you do autoscale here, it tends to jump around in appearing
+        # to stretch to the window and be in 'normal' size
+        #mid.get_plot().replot()
+
 
     def open_process(self):
         """ Get a filename to load.
@@ -200,8 +253,6 @@ class GainOffset(QtGui.QMainWindow):
         widget.
         """
         log.info("Start scan")
-        self.model = model.Model()
-        self.model.assign("simulation")
 
         orig_gain_start = self.ui.spinBoxGainStart.value()
         orig_gain_end = self.ui.spinBoxGainEnd.value()
@@ -218,6 +269,8 @@ class GainOffset(QtGui.QMainWindow):
        
             gain = orig_gain_start
             gain_group = []
+            self.model = model.Model()
+            self.model.assign("single")
             while gain < orig_gain_end:
                 #log.debug("Gain: %s" % gain)
                 result = self.model.scan(gain, offset, linetime,
@@ -230,6 +283,7 @@ class GainOffset(QtGui.QMainWindow):
 
             offs_it = QtGui.QStandardItem(str(offset))
             offs_it.results = self.model.results
+            log.info("Store results: %s" % len(offs_it.results))
             gain_it = QtGui.QStandardItem("Gain 0-255")
 
             self.datamod.appendRow([offs_it, gain_it])
