@@ -272,6 +272,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # On startup, progress bar is disabled
         pg = self.form.ui.progressBar
         self.assertFalse(pg.isTextVisible())
+        self.assertFalse(pg.isVisible())
 
         # Set a small scan parameter, 
         self.form.ui.spinBoxOffsetStart.setValue(0)

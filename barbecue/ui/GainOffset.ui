@@ -119,13 +119,13 @@
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButtonPause">
+           <widget class="QToolButton" name="toolButtonStop">
             <property name="text">
-             <string>Pause</string>
+             <string>Stop</string>
             </property>
             <property name="icon">
              <iconset resource="bbq_resources.qrc">
-              <normaloff>:/greys/greys/pause.svg</normaloff>:/greys/greys/pause.svg</iconset>
+              <normaloff>:/greys/greys/stop.svg</normaloff>:/greys/greys/stop.svg</iconset>
             </property>
             <property name="iconSize">
              <size>

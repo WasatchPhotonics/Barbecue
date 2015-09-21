@@ -60,6 +60,9 @@ class GainOffset(QtGui.QMainWindow):
     def set_app_defaults(self):
         """ Setup preliminary values of all widgets.
         """
+        # Hide the progress bar for better startup looks
+        self.ui.progressBar.setVisible(False)
+
         self.ui.spinBoxGainStart.setMinimum(0)
         self.ui.spinBoxGainStart.setMaximum(254)
         self.ui.spinBoxGainStart.setValue(0)
@@ -92,6 +95,9 @@ class GainOffset(QtGui.QMainWindow):
         self.model_header.append('Gain')
         self.datamod.setHorizontalHeaderLabels(self.model_header)
         self.ui.treeView.setModel(self.datamod)
+
+        # Trigger an update of the text
+        self.update_summary()
  
     def setup_signals(self):
         """ Configure widget signals.
