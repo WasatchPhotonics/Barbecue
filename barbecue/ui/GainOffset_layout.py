@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         self.progressBar = QtGui.QProgressBar(self.frameControl)
         self.progressBar.setEnabled(True)
         self.progressBar.setProperty("value", 0)
-        self.progressBar.setTextVisible(False)
+        self.progressBar.setTextVisible(True)
         self.progressBar.setOrientation(QtCore.Qt.Horizontal)
         self.progressBar.setInvertedAppearance(False)
         self.progressBar.setTextDirection(QtGui.QProgressBar.TopToBottom)

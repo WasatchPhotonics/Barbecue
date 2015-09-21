@@ -105,6 +105,17 @@ class GainOffset(QtGui.QMainWindow):
         self.processTimer.setSingleShot(True)
         self.processTimer.timeout.connect(self.loop_process)
 
+        # Progress indicators for data saving
+        self.saveTimer = QtCore.QTimer()
+        self.saveTimer.setSingleShot(True)
+        self.saveTimer.timeout.connect(self.loop_save)
+
+        # When the save file action is activated, it needs to wait for
+        # the filename selection dialog to close first. Signal is
+        # connected with lambda function to filename below
+        self.save_wait_timer = QtCore.QTimer()
+        self.save_wait_timer.setSingleShot(True)
+
     def setup_signals(self):
         """ Configure widget signals.
         """
@@ -205,28 +216,45 @@ class GainOffset(QtGui.QMainWindow):
         """ Select a filename to save the current results.
         """
         file_name = self.file_dialog.getOpenFileName()
-        self.save_file(file_name)
+        
+        # Trigger the timer after the dialog has had a chance to close
+        self.save_wait_timer.timeout.connect(lambda: self.save_file(file_name))
+        self.save_wait_timer.start(1000)
+        #self.save_file(file_name)
 
     def save_file(self, file_name):
         """ Write the current contents of the datamodel displayed in the
         tree widget to disk.
         """ 
 
-        csv_file = open(file_name, "wb")
+        self.ui.progressBar.total = self.datamod.rowCount() * 255
+        self.ui.progressBar.setValue(0)
+        self.op_count = 0
+        self.csv_file = open(file_name, "wb")
 
-        self.write_header(csv_file)
+        self.write_header(self.csv_file)
 
-        position = 0
-        while position < self.datamod.rowCount():
+        self.save_position = 0
+        self.loop_save()
+
+
+
+    def loop_save(self):
+        """ Iterate through the data to be saved in a timer to enable
+        load inhibits and progress bar updates.
+        """
             
-            item = self.datamod.item(position, 0)
-            log.info("Write item: %s" % item)
+        item = self.datamod.item(self.save_position, 0)
+        log.info("Write item: %s" % item)
 
-            self.write_results(csv_file, item)            
-            position += 1
+        self.write_results(self.csv_file, item)            
+        self.save_position += 1
 
-        csv_file.close()
-        return True
+        if self.save_position >= self.datamod.rowCount():
+            self.csv_file.close()
+        else:
+            if self.saveTimer.isActive():
+                self.saveTimer.start(0)
 
     def write_results(self, csv_file, item):
         """ Print the contents of the datamodel item to disk.
@@ -239,6 +267,7 @@ class GainOffset(QtGui.QMainWindow):
             for pixel in result.data:
                 csv_file.write("%s," % pixel)
             csv_file.write("\n")
+            self.update_progress_bar()
 
     def write_header(self, csv_file):
         """ write the csv file format header to the passed in file.
@@ -264,6 +293,7 @@ class GainOffset(QtGui.QMainWindow):
         # Store the current total combinations for use by the progress
         # bar update function
         self.ui.progressBar.total = total
+        self.ui.progressBar.setValue(0)
 
     def setup_process(self):
         """ Configure the test iteration based on set parameters,
@@ -271,7 +301,6 @@ class GainOffset(QtGui.QMainWindow):
         """
         log.info("Start setup")
         self.stop_scan = False
-        self.ui.progressBar.setTextVisible(True)
         self.ui.progressBar.setVisible(True)
 
         self.orig_gain_start = self.ui.spinBoxGainStart.value()
@@ -329,6 +358,7 @@ class GainOffset(QtGui.QMainWindow):
         """      
         self.stop_scan = True
         self.processTimer.stop()
+        self.saveTimer.stop()
  
     def update_progress_bar(self):
         """ Given a op_count value, assign the progress bar to the
@@ -338,18 +368,9 @@ class GainOffset(QtGui.QMainWindow):
         self.op_count = self.op_count * 1.0
         tot = self.ui.progressBar.total * 1.0
         perc = (self.op_count / tot) * 100.0
-        log.info("Set progress: %s total %s" % (perc, tot))
         self.ui.progressBar.setValue(perc)
         log.info("progress: %s " % self.ui.progressBar.value())
         
-
-    def write_file(self, filename):
-        """ Read every entry from the current data model, write it out
-        to the temporary disk file.
-        """
-        log.info("start write to disk")
-        #self.
-
 
     def move_linetime(self, event):
         """ Change the integration time range to make sure the user
@@ -371,6 +392,7 @@ class GainOffset(QtGui.QMainWindow):
         """
         os_value = self.ui.spinBoxOffsetStart.value()
         self.ui.spinBoxOffsetEnd.setMinimum(os_value + 1)
+
 
 class NoButtonImageDialog(plot.ImageDialog):
     """ An guiqwt imagedialog with the ok/cancel buttons hidden.
