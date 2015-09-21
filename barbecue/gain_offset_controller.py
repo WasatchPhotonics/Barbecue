@@ -98,7 +98,13 @@ class GainOffset(QtGui.QMainWindow):
 
         # Trigger an update of the text
         self.update_summary()
- 
+
+        # Create the timer so the test controller can have access to the
+        # various parts of the gain/offset loop control 
+        self.processTimer = QtCore.QTimer()
+        self.processTimer.setSingleShot(True)
+        self.processTimer.timeout.connect(self.loop_process)
+
     def setup_signals(self):
         """ Configure widget signals.
         """
@@ -113,7 +119,8 @@ class GainOffset(QtGui.QMainWindow):
         splt = self.ui.spinBoxLineTime
         splt.valueChanged.connect(self.move_linetime)
 
-        self.ui.toolButtonStart.clicked.connect(self.start_process)
+        #self.ui.toolButtonStart.clicked.connect(self.start_process)
+        self.ui.toolButtonStart.clicked.connect(self.setup_process)
         self.ui.toolButtonStop.clicked.connect(self.stop_process)
 
         # If start of end ranges change, update the summary text
@@ -258,72 +265,79 @@ class GainOffset(QtGui.QMainWindow):
         # bar update function
         self.ui.progressBar.total = total
 
-    def start_process(self):
-        """ For all of the iterations specified in the gain and offset
-        controls, run a single scan, and add the results to the tree 
-        widget.
+    def setup_process(self):
+        """ Configure the test iteration based on set parameters,
+        trigger the loop timer to start the process.
         """
-        log.info("Start process")
+        log.info("Start setup")
         self.stop_scan = False
         self.ui.progressBar.setTextVisible(True)
         self.ui.progressBar.setVisible(True)
 
-        orig_gain_start = self.ui.spinBoxGainStart.value()
-        orig_gain_end = self.ui.spinBoxGainEnd.value()
+        self.orig_gain_start = self.ui.spinBoxGainStart.value()
+        self.orig_gain_end = self.ui.spinBoxGainEnd.value()
 
-        orig_offset_start = self.ui.spinBoxOffsetStart.value()
-        orig_offset_end = self.ui.spinBoxOffsetEnd.value()
-        offset = orig_offset_start
+        self.orig_offset_start = self.ui.spinBoxOffsetStart.value()
+        self.orig_offset_end = self.ui.spinBoxOffsetEnd.value()
+        self.offset = self.orig_offset_start
 
-        linetime = self.ui.spinBoxLineTime.value()
-        integration = self.ui.spinBoxIntegrationTime.value()
+        self.linetime = self.ui.spinBoxLineTime.value()
+        self.integration = self.ui.spinBoxIntegrationTime.value()
 
-        op_count = 0
-        while offset <= orig_offset_end:
-            log.info("Process offset: %s" % offset)
+        self.op_count = 0
+
+        self.processTimer.start(0)
+
+    def loop_process(self):
+        """ Once the timer has been activated, loop through the test
+        iteration structure until all offset/gain options have been
+        processed.
+        """
+ 
+        log.info("Process offset: %s" % self.offset)
        
-            gain = orig_gain_start
-            gain_group = []
-            self.model = model.Model()
-            self.model.assign("single")
-            while gain <= orig_gain_end:
-                #log.debug("Gain: %s" % gain)
-                result = self.model.scan(gain, offset, linetime,
-                                         integration)
-                if not result:
-                    self.log.critical("Scan failure")
+        gain = self.orig_gain_start
+        gain_group = []
+        one_model = model.Model()
+        one_model.assign("single")
+        while gain <= self.orig_gain_end:
+            #log.debug("Gain: %s" % gain)
+            result = one_model.scan(gain, self.offset, self.linetime,
+                                     self.integration)
 
-                op_count += 1
-                self.update_progress_bar(op_count)
-                QtGui.qApp.processEvents()
-                gain += 1
+            self.update_progress_bar()
+            gain += 1
 
-                if self.stop_scan:
-                    gain = orig_gain_end * 2
-                    offset = orig_offset_end * 2
+        offs_it = QtGui.QStandardItem(str(self.offset))
+        offs_it.results = one_model.results
+        log.info("Store results: %s" % len(offs_it.results))
+        gain_it = QtGui.QStandardItem("Gain 0-255")
 
-            offs_it = QtGui.QStandardItem(str(offset))
-            offs_it.results = self.model.results
-            log.info("Store results: %s" % len(offs_it.results))
-            gain_it = QtGui.QStandardItem("Gain 0-255")
+        self.datamod.appendRow([offs_it, gain_it])
 
-            self.datamod.appendRow([offs_it, gain_it])
+        self.offset += 1
 
-            offset += 1
+        if self.offset <= self.orig_offset_end:
+            if not self.processTimer.isActive():
+                log.info("Start timer: %s" % self.offset)
+                self.processTimer.start(0)
+
 
     def stop_process(self):
         """ set the global variable to inhibit a running process, reset
         gui items.
         """      
         self.stop_scan = True
+        self.processTimer.stop()
  
-    def update_progress_bar(self, op_count):
+    def update_progress_bar(self):
         """ Given a op_count value, assign the progress bar to the
         percentage of total operations. 
         """
-        op_count = op_count * 1.0
+        self.op_count += 1
+        self.op_count = self.op_count * 1.0
         tot = self.ui.progressBar.total * 1.0
-        perc = (op_count / tot) * 100.0
+        perc = (self.op_count / tot) * 100.0
         log.info("Set progress: %s total %s" % (perc, tot))
         self.ui.progressBar.setValue(perc)
         log.info("progress: %s " % self.ui.progressBar.value())
