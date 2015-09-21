@@ -113,7 +113,8 @@ class GainOffset(QtGui.QMainWindow):
         splt = self.ui.spinBoxLineTime
         splt.valueChanged.connect(self.move_linetime)
 
-        self.ui.toolButtonStart.clicked.connect(self.start)
+        self.ui.toolButtonStart.clicked.connect(self.start_process)
+        self.ui.toolButtonStop.clicked.connect(self.stop_process)
 
         # If start of end ranges change, update the summary text
         spge = self.ui.spinBoxGainEnd
@@ -257,13 +258,15 @@ class GainOffset(QtGui.QMainWindow):
         # bar update function
         self.ui.progressBar.total = total
 
-    def start(self):
+    def start_process(self):
         """ For all of the iterations specified in the gain and offset
         controls, run a single scan, and add the results to the tree 
         widget.
         """
-        log.info("Start scan")
+        log.info("Start process")
+        self.stop_scan = False
         self.ui.progressBar.setTextVisible(True)
+        self.ui.progressBar.setVisible(True)
 
         orig_gain_start = self.ui.spinBoxGainStart.value()
         orig_gain_end = self.ui.spinBoxGainEnd.value()
@@ -295,6 +298,10 @@ class GainOffset(QtGui.QMainWindow):
                 QtGui.qApp.processEvents()
                 gain += 1
 
+                if self.stop_scan:
+                    gain = orig_gain_end * 2
+                    offset = orig_offset_end * 2
+
             offs_it = QtGui.QStandardItem(str(offset))
             offs_it.results = self.model.results
             log.info("Store results: %s" % len(offs_it.results))
@@ -303,7 +310,13 @@ class GainOffset(QtGui.QMainWindow):
             self.datamod.appendRow([offs_it, gain_it])
 
             offset += 1
-       
+
+    def stop_process(self):
+        """ set the global variable to inhibit a running process, reset
+        gui items.
+        """      
+        self.stop_scan = True
+ 
     def update_progress_bar(self, op_count):
         """ Given a op_count value, assign the progress bar to the
         percentage of total operations. 
@@ -313,6 +326,7 @@ class GainOffset(QtGui.QMainWindow):
         perc = (op_count / tot) * 100.0
         log.info("Set progress: %s total %s" % (perc, tot))
         self.ui.progressBar.setValue(perc)
+        log.info("progress: %s " % self.ui.progressBar.value())
         
 
     def write_file(self, filename):

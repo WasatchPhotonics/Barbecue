@@ -287,6 +287,32 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.assertTrue(pg.isVisible())
         self.assertTrue(pg.isTextVisible())
         self.assertEqual(pg.value(), 100)
+
+    def test_stop_button(self):
+        # Setup a long scan
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(255)
+
+        first_pg_val = self.form.ui.progressBar.value()
+        # Trigger the scan, verify the progress bar updates
+        self.form.ui.toolButtonStart.click()
+        log.info("Pre button click")
+        self.form.ui.toolButtonStop.click()
+
+
+
+        # Click stop, verify that the progress bar has stopped
+        #self.form.ui.toolButtonStop.click()
+        second_pg_val = self.form.ui.progressBar.value()
+
+        # Wait, check the progress bar again to make sure it actually
+        # stopped
+        #QtTest.QTest.qWait(1000)
+        #third_pg_val = self.form.ui.progressBar.value()
+        #self.assertEqual(second_pg_val, third_pg_val)
+        log.info("Values: %s, %s " % (first_pg_val, second_pg_val))
  
 class TestGainOffsetScript(unittest.TestCase):
 
