@@ -253,8 +253,7 @@ class GainOffset(QtGui.QMainWindow):
         if self.save_position >= self.datamod.rowCount():
             self.csv_file.close()
         else:
-            if self.saveTimer.isActive():
-                self.saveTimer.start(0)
+            self.saveTimer.start(0)
 
     def write_results(self, csv_file, item):
         """ Print the contents of the datamodel item to disk.
@@ -369,7 +368,7 @@ class GainOffset(QtGui.QMainWindow):
         tot = self.ui.progressBar.total * 1.0
         perc = (self.op_count / tot) * 100.0
         self.ui.progressBar.setValue(perc)
-        log.info("progress: %s " % self.ui.progressBar.value())
+        #log.info("progress: %s " % self.ui.progressBar.value())
         
 
     def move_linetime(self, event):

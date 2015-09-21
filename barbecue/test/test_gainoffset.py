@@ -317,11 +317,11 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.form.ui.spinBoxOffsetStart.setValue(0)
         self.form.ui.spinBoxOffsetEnd.setValue(2)
         self.form.ui.spinBoxGainStart.setValue(0)
-        self.form.ui.spinBoxGainEnd.setValue(15)
+        self.form.ui.spinBoxGainEnd.setValue(55)
 
         # Trigger the scan
         self.form.ui.toolButtonStart.click()
-        QtTest.QTest.qWait(1000)
+        QtTest.QTest.qWait(3000)
         
         # trigger the save action with specified file
         self.form.save_file("test_file.csv")
@@ -331,7 +331,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         first_val = self.form.ui.progressBar.value()
 
         # wait, get progress bar again, verify they are different
-        QtTest.QTest.qWait(300)
+        QtTest.QTest.qWait(800)
         second_val = self.form.ui.progressBar.value()
         self.assertNotEqual(first_val, second_val)
 
