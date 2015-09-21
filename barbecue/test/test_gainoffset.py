@@ -284,6 +284,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # Trigger the scan, verify that the progress bar updates
         self.form.ui.toolButtonStart.click()
         QtTest.QTest.qWait(1000)
+        self.assertTrue(pg.isVisible())
         self.assertTrue(pg.isTextVisible())
         self.assertEqual(pg.value(), 100)
  
