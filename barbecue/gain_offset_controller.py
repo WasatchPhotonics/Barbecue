@@ -247,12 +247,17 @@ class GainOffset(QtGui.QMainWindow):
         msg = "System will process %s combinations." % total
         self.ui.labelProcessing.setText(msg)
 
+        # Store the current total combinations for use by the progress
+        # bar update function
+        self.ui.progressBar.total = total
+
     def start(self):
         """ For all of the iterations specified in the gain and offset
         controls, run a single scan, and add the results to the tree 
         widget.
         """
         log.info("Start scan")
+        self.ui.progressBar.setTextVisible(True)
 
         orig_gain_start = self.ui.spinBoxGainStart.value()
         orig_gain_end = self.ui.spinBoxGainEnd.value()
@@ -264,6 +269,7 @@ class GainOffset(QtGui.QMainWindow):
         linetime = self.ui.spinBoxLineTime.value()
         integration = self.ui.spinBoxIntegrationTime.value()
 
+        op_count = 0
         while offset <= orig_offset_end:
             log.info("Process offset: %s" % offset)
        
@@ -271,13 +277,15 @@ class GainOffset(QtGui.QMainWindow):
             gain_group = []
             self.model = model.Model()
             self.model.assign("single")
-            while gain < orig_gain_end:
+            while gain <= orig_gain_end:
                 #log.debug("Gain: %s" % gain)
                 result = self.model.scan(gain, offset, linetime,
                                          integration)
                 if not result:
                     self.log.critical("Scan failure")
 
+                op_count += 1
+                self.update_progress_bar(op_count)
                 QtGui.qApp.processEvents()
                 gain += 1
 
@@ -289,6 +297,17 @@ class GainOffset(QtGui.QMainWindow):
             self.datamod.appendRow([offs_it, gain_it])
 
             offset += 1
+       
+    def update_progress_bar(self, op_count):
+        """ Given a op_count value, assign the progress bar to the
+        percentage of total operations. 
+        """
+        op_count = op_count * 1.0
+        tot = self.ui.progressBar.total * 1.0
+        perc = (op_count / tot) * 100.0
+        log.info("Set progress: %s total %s" % (perc, tot))
+        self.ui.progressBar.setValue(perc)
+        
 
     def write_file(self, filename):
         """ Read every entry from the current data model, write it out

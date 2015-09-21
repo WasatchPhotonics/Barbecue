@@ -268,8 +268,24 @@ class TestGainOffsetControllerView(unittest.TestCase):
         end_data = plot.get_default_item().get_data(0,0)
         self.assertNotEqual(start_data, end_data)
 
+    def test_progress_bar(self):
+        # On startup, progress bar is disabled
+        pg = self.form.ui.progressBar
+        self.assertFalse(pg.isTextVisible())
+
+        # Set a small scan parameter, 
+        self.form.ui.spinBoxOffsetStart.setValue(0)
+        self.form.ui.spinBoxOffsetEnd.setValue(1)
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(1)
+
         
-     
+        # Trigger the scan, verify that the progress bar updates
+        self.form.ui.toolButtonStart.click()
+        QtTest.QTest.qWait(1000)
+        self.assertTrue(pg.isTextVisible())
+        self.assertEqual(pg.value(), 100)
+ 
 class TestGainOffsetScript(unittest.TestCase):
 
     def tearDown(self):

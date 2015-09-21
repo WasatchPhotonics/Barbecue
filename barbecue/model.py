@@ -50,6 +50,7 @@ class Model(object):
         log.info("Setup result is: %s" % result)
 
         result = dev.set_gain(gain)
+        result = dev.set_offset(offset)
         result, data = dev.grab_pipe()
 
         store_result = Result(gain, offset, linetime, integration, data)
