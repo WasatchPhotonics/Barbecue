@@ -201,25 +201,6 @@ class GainOffset(QtGui.QMainWindow):
 
         plot.replot()
  
-        #self.image_data.append(data)
-        #if len(self.image_data) > self.image_height:
-            #self.image_data = self.image_data[1:]
-#
-        #img_data = range(len(self.image_data))
-#
-        #position = 0
-        #while position < len(img_data):
-            #img_data[position] = self.image_data[position]
-            #position += 1
-#
-        #new_data = numpy.array(img_data).astype(float)
-#
-        #mid = self.main_image_dialog
-        #mid.image.set_data(new_data)
-
-        # If you do autoscale here, it tends to jump around in appearing
-        # to stretch to the window and be in 'normal' size
-        #mid.get_plot().replot()
 
 
     def open_process(self):
@@ -435,6 +416,8 @@ class GainOffset(QtGui.QMainWindow):
 
         self.op_count = 0
 
+        self.acquire_model = model.Model()
+        self.acquire_model.assign("cobra")
         self.processTimer.start(0)
 
     def loop_process(self):
@@ -447,18 +430,22 @@ class GainOffset(QtGui.QMainWindow):
        
         gain = self.orig_gain_start
         gain_group = []
-        one_model = model.Model()
-        one_model.assign("single")
         while gain <= self.orig_gain_end:
             #log.debug("Gain: %s" % gain)
-            result = one_model.scan(gain, self.offset, self.linetime,
-                                     self.integration)
+            result = self.acquire_model.scan(gain, self.offset, 
+                                             self.linetime, 
+                                             self.integration
+                                            )
 
             self.update_progress_bar()
             gain += 1
 
         offs_it = QtGui.QStandardItem(str(self.offset))
-        offs_it.results = one_model.results
+        offs_it.results = self.acquire_model.results
+
+        # Reset the results list for next pass
+        self.acquire_model.results = []
+
         #log.info("Store results: %s" % len(offs_it.results))
         gain_it = QtGui.QStandardItem("Gain 0-255")
 
@@ -470,6 +457,7 @@ class GainOffset(QtGui.QMainWindow):
             if not self.processTimer.isActive():
                 #log.info("Start timer: %s" % self.offset)
                 self.processTimer.start(0)
+            
 
 
     def stop_process(self):
