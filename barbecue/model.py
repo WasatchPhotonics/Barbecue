@@ -41,6 +41,9 @@ class Model(object):
             self._dev = DALSA.Cobra()
 
         result = self._dev.setup_pipe()
+        result, data = self._dev.grab_pipe()
+        forc_res = self._dev.open_port()
+        forc_res = self._dev.start_scan()
         #log.info("Setup result is: %s" % result)
         return True
 

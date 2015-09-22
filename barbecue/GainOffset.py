@@ -12,7 +12,7 @@ from PyQt4 import QtGui
 from barbecue import gain_offset_controller
 
 logging.basicConfig(filename="GainOffset_log.txt", filemode="w",
-                    level=logging.DEBUG)
+                    level=logging.INFO)
 log = logging.getLogger()
 
 strm = logging.StreamHandler(sys.stderr)

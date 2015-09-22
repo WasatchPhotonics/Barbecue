@@ -453,12 +453,12 @@ class GainOffset(QtGui.QMainWindow):
 
         self.offset += 1
 
-        #if self.offset <= self.orig_offset_end:
-            #if not self.processTimer.isActive():
-                ##log.info("Start timer: %s" % self.offset)
-                #self.processTimer.start(10)
+        if self.offset <= self.orig_offset_end:
+            if not self.processTimer.isActive():
+                #log.info("Start timer: %s" % self.offset)
+                self.processTimer.start(10)
 
-        if self.offset >= self.orig_offset_end:
+        else:
             log.info("end offset loop")
             
 
@@ -534,7 +534,7 @@ class NoButtonImageDialog(plot.ImageDialog):
         new_data = numpy.array(base_data).astype(float)
 
         bmi = builder.make.image
-        self.image = bmi(new_data, colormap="gist_earth")
+        self.image = bmi(new_data, colormap="gist_rainbow")
         local_plot = self.get_plot()
         local_plot.add_item(self.image)
         local_plot.do_autoscale()
