@@ -453,10 +453,13 @@ class GainOffset(QtGui.QMainWindow):
 
         self.offset += 1
 
-        if self.offset <= self.orig_offset_end:
-            if not self.processTimer.isActive():
-                #log.info("Start timer: %s" % self.offset)
-                self.processTimer.start(0)
+        #if self.offset <= self.orig_offset_end:
+            #if not self.processTimer.isActive():
+                ##log.info("Start timer: %s" % self.offset)
+                #self.processTimer.start(10)
+
+        if self.offset >= self.orig_offset_end:
+            log.info("end offset loop")
             
 
 
