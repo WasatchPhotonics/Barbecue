@@ -15,10 +15,10 @@ logging.basicConfig(filename="GainOffset_log.txt", filemode="w",
                     level=logging.DEBUG)
 log = logging.getLogger()
 
-#strm = logging.StreamHandler(sys.stderr)
-#frmt = logging.Formatter("%(name)s - %(levelname)s %(message)s")
-#strm.setFormatter(frmt)
-#log.addHandler(strm)
+strm = logging.StreamHandler(sys.stderr)
+frmt = logging.Formatter("%(name)s - %(levelname)s %(message)s")
+strm.setFormatter(frmt)
+log.addHandler(strm)
 
 class GainOffsetApplication(object):
     """ Create the window with the graphs, setup communication based on

@@ -4,6 +4,7 @@
 import csv
 import numpy
 import logging
+import StringIO
 
 from PyQt4 import QtGui, QtCore
 
@@ -276,21 +277,25 @@ class GainOffset(QtGui.QMainWindow):
             self.datamod.appendRow([offs_it, gain_it])
             return
 
-        # compare current line gain to last gain, if different, add last
-        # item, start a new item
-   
+       
+        new_data = [] 
+        for item in line["Data"][0:2047]:
+            new_data.append(float(item))
+
         new_result = model.Result(line["Gain"], line["Offset"], 
                                   line["Line Time"], 
                                   line["Integration Time"],
-                                  line["Data"]
+                                  new_data
                                  )
 
         # If it's the very first pass, just assign it
         if self.last_model == None:
             self.last_model = model.Model()
 
-        new_offset = new_result.offset
 
+        # compare current line offset to last offset, if different, add last
+        # item, start a new item
+        new_offset = new_result.offset
         if len(self.last_model.results) == 0:
             old_offset = new_offset
         else:
@@ -329,8 +334,7 @@ class GainOffset(QtGui.QMainWindow):
         
         # Trigger the timer after the dialog has had a chance to close
         self.save_wait_timer.timeout.connect(lambda: self.save_file(file_name))
-        self.save_wait_timer.start(1000)
-        #self.save_file(file_name)
+        self.save_wait_timer.start(300)
 
     def save_file(self, file_name):
         """ Write the current contents of the datamodel displayed in the

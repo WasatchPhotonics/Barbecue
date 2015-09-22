@@ -368,13 +368,18 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # Why do I have to specify application level coordinates, get
         # the child, then click the button? If you do mouseclick on the
         # treeview widget directly it does nothing.
-        #treeview_pos = QtCore.QPoint(140, 500)
-        #child = self.form.childAt(treeview_pos)
-        #QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton)
+        plot = self.form.ui.image_dialog.get_plot()
+        start_data = plot.get_default_item().get_data(0,10)
 
-        #QtTest.QTest.qWait(1000)
-        #end_data = plot.get_default_item().get_data(0,0)
-        #self.assertNotEqual(start_data, end_data)
+        treeview_pos = QtCore.QPoint(140, 500)
+        child = self.form.childAt(treeview_pos)
+        relative_move = QtCore.QPoint(20, 10)
+        QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton,
+                                pos=relative_move
+                               )
+
+        end_data = plot.get_default_item().get_data(0,10)
+        self.assertNotEqual(start_data, end_data)
         
 class TestGainOffsetScript(unittest.TestCase):
 
