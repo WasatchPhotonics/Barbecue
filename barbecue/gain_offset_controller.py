@@ -162,14 +162,8 @@ class GainOffset(QtGui.QMainWindow):
         """ Based on the tree view selected datamodel item, build an
         image in the dialog.
         """
-        #log.info("Update image")
-        # Get the currently selected item
         idx = self.ui.treeView.selectedIndexes()
-        log.info("Clicked: %s" % idx)
-
         item = self.datamod.item(idx[0].row(), idx[0].column())
-        #log.info("item: %s" % item.results)
-
         self.results_to_image(item)
 
     def results_to_image(self, item):
@@ -417,7 +411,7 @@ class GainOffset(QtGui.QMainWindow):
         self.op_count = 0
 
         self.acquire_model = model.Model()
-        self.acquire_model.assign("cobra")
+        self.acquire_model.assign("single")
         self.processTimer.start(0)
 
     def loop_process(self):

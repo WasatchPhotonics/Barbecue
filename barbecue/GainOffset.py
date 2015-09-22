@@ -12,13 +12,27 @@ from PyQt4 import QtGui
 from barbecue import gain_offset_controller
 
 logging.basicConfig(filename="GainOffset_log.txt", filemode="w",
-                    level=logging.INFO)
+                    level=logging.DEBUG)
 log = logging.getLogger()
 
-strm = logging.StreamHandler(sys.stderr)
-frmt = logging.Formatter("%(name)s - %(levelname)s %(message)s")
-strm.setFormatter(frmt)
-log.addHandler(strm)
+# The test controller starts a stream handler as well, which is
+# eminently useful. Check if the stream handler already exists in order
+# to not print duplicate messages. From: http://stackoverflow.com/\
+# questions/6333916/python-logging-ensure-a-handler-is-added-only-once
+# This is required because the log imports happen at the start of the
+# test file, even though you may not but running GainOffsetApplication
+# tests involving the code below.
+if log.handlers == []:
+    strm = logging.StreamHandler(sys.stderr)
+    frmt = logging.Formatter("%(name)s - %(levelname)s %(message)s")
+    strm.setFormatter(frmt)
+    log.addHandler(strm)
+
+    # Change the level to INFO, as this is now running on the command
+    # line
+    log.setLevel(logging.INFO)
+    
+    
 
 class GainOffsetApplication(object):
     """ Create the window with the graphs, setup communication based on

@@ -393,6 +393,7 @@ class TestGainOffsetScript(unittest.TestCase):
         # This cleans up old windows from rapid tests
         app.closeAllWindows()
 
+
     def test_parser(self):
         # Accept one option: testing, which causes the form to close
         # itself which should only be used with the unittest as the
@@ -407,6 +408,9 @@ class TestGainOffsetScript(unittest.TestCase):
         self.assertTrue(args.testing)
 
     def test_main_options(self):
+        result = GainOffset.main(None)
+        self.assertEquals(2, result)
+
         # Verify that main run with the testing option auto-closes the
         # application
         result = GainOffset.main(["unittest", "-t"])

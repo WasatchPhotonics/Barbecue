@@ -31,10 +31,7 @@ class Model(object):
         
         self.device = device_type
 
-        if self.device == "simulation":
-            self._dev = simulation.SimulatedSpectraDevice()
-
-        elif self.device == "single":
+        if self.device == "single":
             self._dev = simulation.SimulatedCobraSLED()
 
         elif self.device == "cobra":
@@ -69,7 +66,7 @@ class Model(object):
     def close_model(self):
         """ Helper function to close the pipe.
         """
-        result = self._dev.close_pipe()
+        return self._dev.close_pipe()
             
 class Result(object):
     """ holds stored data and device settings from a given scan.

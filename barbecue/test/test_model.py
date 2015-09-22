@@ -22,7 +22,8 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, self.model.assign, "KnownInvalid")
         
         # Pass with the simulation assignment
-        self.assertTrue(self.model.assign("simulation"))
+        self.assertTrue(self.model.assign("single"))
+        self.assertTrue(self.model.close_model())
 
     def test_result(self):
         # result object has expected default values
@@ -40,7 +41,7 @@ class Test(unittest.TestCase):
         self.assertRaises(ValueError, scan, gain=None, offset=None,
                           linetime=None, integration=None)
 
-        self.model.assign("simulation")
+        self.model.assign("single")
 
         # Attempt to scan with no gain, offset, fail
         self.assertRaises(ValueError, scan, gain=None, offset=None,
@@ -52,7 +53,6 @@ class Test(unittest.TestCase):
 
         # Make sure the results list data items match expected values
         last_result = self.model.results[-1]
-        print "Result is: [%s]" % last_result
         self.assertEqual(last_result.gain, 1)
         self.assertEqual(last_result.offset, 10)
         self.assertEqual(last_result.linetime, 100)
