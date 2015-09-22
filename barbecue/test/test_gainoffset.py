@@ -234,8 +234,6 @@ class TestGainOffsetControllerView(unittest.TestCase):
         """
         my_file = open(name)
         return my_file.readline()
-
-         
    
     def file_lines(self, name="test_file.csv"):
         """ helper function to return number of liens in the file
@@ -325,7 +323,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
 
         # Trigger the scan
         self.form.ui.toolButtonStart.click()
-        QtTest.QTest.qWait(3000)
+        QtTest.QTest.qWait(1000)
         
         # trigger the save action with specified file
         self.form.save_file("test_file.csv")
@@ -339,7 +337,27 @@ class TestGainOffsetControllerView(unittest.TestCase):
         second_val = self.form.ui.progressBar.value()
         self.assertNotEqual(first_val, second_val)
 
+    def test_load_results_use_progress_bar(self):
+        file_name = "barbecue/test/100samples.csv" 
 
+        # Choose the file, make sure the summary text is updated
+        self.form.load_file(file_name)
+        QtTest.QTest.qWait(100)
+    
+        # get the read from the progress bar near the start
+        start_progress = self.form.ui.progressBar.value()
+        
+        # as the file loads, read the progress bar , make sure they are
+        # different
+        QtTest.QTest.qWait(100)
+        mid_progress = self.form.ui.progressBar.value()
+
+        self.assertNotEqual(start_progress, mid_progress)
+
+        # Make sure the total entries is two
+        dm = self.form.datamod
+        self.assertEqual(dm.rowCount(), 2)
+        
 class TestGainOffsetScript(unittest.TestCase):
 
     def tearDown(self):

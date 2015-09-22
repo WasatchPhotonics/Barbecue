@@ -1,6 +1,7 @@
 """ Gain/Offset walkthrough with live visualization.
 """
 
+import csv
 import numpy
 import logging
 
@@ -110,6 +111,10 @@ class GainOffset(QtGui.QMainWindow):
         self.saveTimer.setSingleShot(True)
         self.saveTimer.timeout.connect(self.loop_save)
 
+        self.loadTimer = QtCore.QTimer()
+        self.loadTimer.setSingleShot(True)
+        self.loadTimer.timeout.connect(self.loop_load)
+
         # When the save file action is activated, it needs to wait for
         # the filename selection dialog to close first. Signal is
         # connected with lambda function to filename below
@@ -212,6 +217,92 @@ class GainOffset(QtGui.QMainWindow):
         """
         pass
 
+    def load_file(self, file_name):
+        """ Set the progress bar indicators and convert a csv file to
+        datamodel.
+        """
+        total = self.get_line_total(file_name)
+
+        msg = "Loading %s combinations from %s" % (total, file_name)
+        self.ui.labelProcessing.setText(msg)
+
+        self.ui.progressBar.total = total
+        self.ui.progressBar.setValue(0)
+        self.op_count = 0
+
+        csv_header = ["Offset", "Gain", "Line Time", "Integration Time"]
+        self.csv_file = csv.DictReader(open(file_name,'rb'),
+                                       csv_header, 'Data')
+
+        # Read past the header:
+        header = self.csv_file.next()
+
+        self.load_position = 0
+        self.last_model = None
+        self.loop_load()
+
+    def loop_load(self):
+        """ Iterate through the file data to be loaded inside a timer,
+        update the interface progress.
+        """
+
+        line = None
+        try:
+            line = self.csv_file.next()
+            #log.info("File header: %s" % line['Offset'])
+        except:
+            log.warn("Problem reading file")
+
+        log.info("read line: %s" % line)   
+        self.load_position += 1 
+        self.update_progress_bar()
+        # compare current line gain to last gain, if different, add last
+        # item, start a new item
+        if self.load_position < self.ui.progressBar.total:
+            self.loadTimer.start(0)
+    
+        new_result = model.Result(line["Gain"], line["Offset"], 
+                                  line["Line Time"], 
+                                  line["Integration Time"],
+                                  line["Data"]
+                                 )
+
+        # If it's the very first pass, just assign it
+        if self.last_model == None:
+            self.last_model = model.Model()
+
+        new_offset = new_result.offset
+
+        if len(self.last_model.results) == 0:
+            old_offset = -1
+        else:
+            old_offset = self.last_model.results[0].offset
+
+        if new_offset != old_offset:
+            log.info("Offset mismatch, add old model")
+            self.last_model = model.Model()
+
+        self.last_model.results.append(new_result)
+ 
+        #offs_it = QtGui.QStandardItem(str(self.offset))
+        #offs_it.results = one_model.results
+        #log.info("Store results: %s" % len(offs_it.results))
+        #gain_it = QtGui.QStandardItem("Gain 0-255")
+
+        #self.datamod.appendRow([offs_it, gain_it])
+
+        
+    def get_line_total(self, file_name):
+        """ Make a pass through the file, read the total number of
+        lines.
+        """
+        lfile = open(file_name)
+        lcount = 0
+        for line in lfile.readlines():
+            lcount += 1
+        lfile.close()
+        return lcount
+
     def save_process(self):
         """ Select a filename to save the current results.
         """
@@ -226,8 +317,12 @@ class GainOffset(QtGui.QMainWindow):
         """ Write the current contents of the datamodel displayed in the
         tree widget to disk.
         """ 
+        total = self.datamod.rowCount() * 255
 
-        self.ui.progressBar.total = self.datamod.rowCount() * 255
+        msg = "Saving %s combinations to %s" % (total, file_name)
+        self.ui.labelProcessing.setText(msg)
+
+        self.ui.progressBar.total = total
         self.ui.progressBar.setValue(0)
         self.op_count = 0
         self.csv_file = open(file_name, "wb")
@@ -236,8 +331,6 @@ class GainOffset(QtGui.QMainWindow):
 
         self.save_position = 0
         self.loop_save()
-
-
 
     def loop_save(self):
         """ Iterate through the data to be saved in a timer to enable
