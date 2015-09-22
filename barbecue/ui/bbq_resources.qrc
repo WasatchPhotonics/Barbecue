@@ -10,6 +10,7 @@
     <file>greys/zoom.svg</file>
   </qresource>
   <qresource prefix="imagery">
+    <file>barbecue_icon.svg</file>
     <file>example_heatmap.jpg</file>
   </qresource>
 </RCC>

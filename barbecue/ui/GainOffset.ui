@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Gain/Offset Configuration</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="bbq_resources.qrc">
+    <normaloff>:/imagery/barbecue_icon.svg</normaloff>:/imagery/barbecue_icon.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
@@ -495,7 +499,7 @@
      <x>0</x>
      <y>0</y>
      <width>1070</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

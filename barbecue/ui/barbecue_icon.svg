@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="72.148888mm"
+   height="71.848892mm"
+   viewBox="0 0 255.64567 254.58269"
+   id="svg9668"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="barbecue_icon.svg">
+  <defs
+     id="defs9670">
+    <linearGradient
+       gradientTransform="matrix(5.482973,0,0,5.482973,-1518.2134,-1310.5166)"
+       y2="254.92329"
+       x2="387.88919"
+       y1="301.61279"
+       x1="387.88919"
+       gradientUnits="userSpaceOnUse"
+       id="SVGID_77_">
+      <stop
+         id="stop9029"
+         style="stop-color:#5E0D00"
+         offset="0.1154" />
+      <stop
+         id="stop9031"
+         style="stop-color:#A41700"
+         offset="0.8626" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="91.614649"
+     inkscape:cy="122.01791"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="-0.1"
+     fit-margin-right="0"
+     fit-margin-bottom="-0.4"
+     inkscape:window-width="1920"
+     inkscape:window-height="1036"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata9673">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-480.92574,-87.219345)">
+    <circle
+       style="fill:url(#SVGID_77_)"
+       id="circle9033"
+       r="128"
+       cy="215.21935"
+       cx="608.57141" />
+    <polygon
+       transform="matrix(10.874536,0,0,1.9254368,-3675.3136,-278.58759)"
+       style="fill:#ffffff"
+       id="polygon9224"
+       points="387.021,286.986 387.021,269.549 402.122,278.268 " />
+    <polygon
+       transform="matrix(-11.002907,0,0,1.9254368,4843.0017,-321.23509)"
+       style="fill:#ffffff"
+       id="polygon9226"
+       points="377.426,269.549 392.527,278.268 377.426,286.986 " />
+    <polygon
+       points="387.021,286.986 387.021,269.549 402.122,278.268 "
+       id="polygon10232"
+       style="fill:#ffffff"
+       transform="matrix(10.874536,0,0,1.9254368,-3675.3136,-366.31516)" />
+  </g>
+</svg>
