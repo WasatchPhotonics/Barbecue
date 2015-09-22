@@ -31,8 +31,6 @@ if log.handlers == []:
     # Change the level to INFO, as this is now running on the command
     # line
     log.setLevel(logging.INFO)
-    
-    
 
 class GainOffsetApplication(object):
     """ Create the window with the graphs, setup communication based on

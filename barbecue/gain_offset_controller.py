@@ -102,7 +102,7 @@ class GainOffset(QtGui.QMainWindow):
         self.update_summary()
 
         # Create the timer so the test controller can have access to the
-        # various parts of the gain/offset loop control 
+        # various parts of the gain/offset loop control
         self.processTimer = QtCore.QTimer()
         self.processTimer.setSingleShot(True)
         self.processTimer.timeout.connect(self.loop_process)
@@ -150,7 +150,7 @@ class GainOffset(QtGui.QMainWindow):
 
         spoe = self.ui.spinBoxOffsetEnd
         spoe.valueChanged.connect(self.update_summary)
-      
+
         # Open/Save results
         self.ui.actionOpen.triggered.connect(self.open_process)
         self.ui.actionSave.triggered.connect(self.save_process)
@@ -182,26 +182,23 @@ class GainOffset(QtGui.QMainWindow):
             img_data[position] = src_data[position]
             position += 1
 
-         
         new_data = numpy.array(img_data).astype(float)
-        
+
         plot = self.ui.image_dialog.get_plot()
 
         # Apparently get_default_item is not supported by the python xy
-        # implementation of guiqwt. 
+        # implementation of guiqwt.
         #plot.get_default_item().set_data(new_data)
         first = plot.get_items()[1]
         first.set_data(new_data)
 
         plot.replot()
- 
-
 
     def open_process(self):
         """ Get a filename to load.
         """
         file_name = self.file_dialog.getOpenFileName()
-        
+
         # Trigger the timer after the dialog has had a chance to close
         self.load_wait_timer.timeout.connect(lambda: self.load_file(file_name))
         self.load_wait_timer.start(500)
@@ -220,7 +217,7 @@ class GainOffset(QtGui.QMainWindow):
         self.op_count = 0
 
         csv_header = ["Offset", "Gain", "Line Time", "Integration Time"]
-        self.csv_file = csv.DictReader(open(file_name,'rb'),
+        self.csv_file = csv.DictReader(open(file_name, 'rb'),
                                        csv_header, 'Data')
 
         # Read past the header:
@@ -244,8 +241,7 @@ class GainOffset(QtGui.QMainWindow):
             line_fail = 1
             log.warn("Problem reading file")
 
-        #log.info("read line: %s" % line)   
-        self.load_position += 1 
+        self.load_position += 1
         self.update_progress_bar()
 
         if line_fail:
@@ -257,13 +253,12 @@ class GainOffset(QtGui.QMainWindow):
             self.datamod.appendRow([offs_it, gain_it])
             return
 
-       
-        new_data = [] 
+        new_data = []
         for item in line["Data"][0:2047]:
             new_data.append(float(item))
 
-        new_result = model.Result(line["Gain"], line["Offset"], 
-                                  line["Line Time"], 
+        new_result = model.Result(line["Gain"], line["Offset"],
+                                  line["Line Time"],
                                   line["Integration Time"],
                                   new_data
                                  )
@@ -291,11 +286,10 @@ class GainOffset(QtGui.QMainWindow):
             self.last_model = model.Model()
 
         self.last_model.results.append(new_result)
- 
+
         if self.load_position < self.ui.progressBar.total:
             self.loadTimer.start(0)
 
-        
     def get_line_total(self, file_name):
         """ Make a pass through the file, read the total number of
         lines.
@@ -311,7 +305,6 @@ class GainOffset(QtGui.QMainWindow):
         """ Select a filename to save the current results.
         """
         file_name = self.file_dialog.getSaveFileName()
-        
         # Trigger the timer after the dialog has had a chance to close
         self.save_wait_timer.timeout.connect(lambda: self.save_file(file_name))
         self.save_wait_timer.start(300)
