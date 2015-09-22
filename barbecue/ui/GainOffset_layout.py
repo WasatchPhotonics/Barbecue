@@ -245,9 +245,9 @@ class Ui_MainWindow(object):
         self.checkBoxDarkPixelAveragin.setText(_translate("MainWindow", "Dark Pixel Averaging", None))
         self.label_9.setText(_translate("MainWindow", "Processing results:", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
-        self.actionOpen.setText(_translate("MainWindow", "Open", None))
+        self.actionOpen.setText(_translate("MainWindow", "Load", None))
         self.actionOpen.setToolTip(_translate("MainWindow", "Open", None))
-        self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+P", None))
+        self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+O", None))
         self.actionSave.setText(_translate("MainWindow", "Save", None))
         self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S", None))
 

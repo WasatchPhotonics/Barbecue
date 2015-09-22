@@ -262,7 +262,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # image data changes
 
         # Why do I have to specify application level coordinates, get
-        # teh child, then click the button? If you do mouseclick on the
+        # the child, then click the button? If you do mouseclick on the
         # treeview widget directly it does nothing.
         treeview_pos = QtCore.QPoint(140, 500)
         child = self.form.childAt(treeview_pos)
@@ -348,8 +348,8 @@ class TestGainOffsetControllerView(unittest.TestCase):
         start_progress = self.form.ui.progressBar.value()
         
         # as the file loads, read the progress bar , make sure they are
-        # different
-        QtTest.QTest.qWait(100)
+        # different. It's a 7 meg file, wait for the load
+        QtTest.QTest.qWait(1000)
         mid_progress = self.form.ui.progressBar.value()
 
         self.assertNotEqual(start_progress, mid_progress)
@@ -357,6 +357,24 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # Make sure the total entries is two
         dm = self.form.datamod
         self.assertEqual(dm.rowCount(), 2)
+            
+        # verify the offset value is read from the file to the datamodel
+        # correctly
+        new_offset = self.form.datamod.item(0, 0).text()
+        self.assertEqual(new_offset, "0")
+
+        # Verify that the image data changes when the entry is clicked
+
+        # Why do I have to specify application level coordinates, get
+        # the child, then click the button? If you do mouseclick on the
+        # treeview widget directly it does nothing.
+        #treeview_pos = QtCore.QPoint(140, 500)
+        #child = self.form.childAt(treeview_pos)
+        #QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton)
+
+        #QtTest.QTest.qWait(1000)
+        #end_data = plot.get_default_item().get_data(0,0)
+        #self.assertNotEqual(start_data, end_data)
         
 class TestGainOffsetScript(unittest.TestCase):
 

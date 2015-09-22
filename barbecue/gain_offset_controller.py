@@ -121,6 +121,10 @@ class GainOffset(QtGui.QMainWindow):
         self.save_wait_timer = QtCore.QTimer()
         self.save_wait_timer.setSingleShot(True)
 
+        self.load_wait_timer = QtCore.QTimer()
+        self.load_wait_timer.setSingleShot(True)
+
+
     def setup_signals(self):
         """ Configure widget signals.
         """
@@ -215,7 +219,11 @@ class GainOffset(QtGui.QMainWindow):
     def open_process(self):
         """ Get a filename to load.
         """
-        pass
+        file_name = self.file_dialog.getOpenFileName()
+        
+        # Trigger the timer after the dialog has had a chance to close
+        self.load_wait_timer.timeout.connect(lambda: self.load_file(file_name))
+        self.load_wait_timer.start(500)
 
     def load_file(self, file_name):
         """ Set the progress bar indicators and convert a csv file to
@@ -247,20 +255,30 @@ class GainOffset(QtGui.QMainWindow):
         """
 
         line = None
+        line_fail = 0
         try:
             line = self.csv_file.next()
             #log.info("File header: %s" % line['Offset'])
         except:
+            line_fail = 1
             log.warn("Problem reading file")
 
-        log.info("read line: %s" % line)   
+        #log.info("read line: %s" % line)   
         self.load_position += 1 
         self.update_progress_bar()
+
+        if line_fail:
+            log.info("Load complete, add final")
+            last_entry = self.last_model.results[0]
+            offs_it = QtGui.QStandardItem(str(last_entry.offset))
+            offs_it.results = self.last_model.results
+            gain_it = QtGui.QStandardItem("Gain 0-255")
+            self.datamod.appendRow([offs_it, gain_it])
+            return
+
         # compare current line gain to last gain, if different, add last
         # item, start a new item
-        if self.load_position < self.ui.progressBar.total:
-            self.loadTimer.start(0)
-    
+   
         new_result = model.Result(line["Gain"], line["Offset"], 
                                   line["Line Time"], 
                                   line["Integration Time"],
@@ -274,22 +292,23 @@ class GainOffset(QtGui.QMainWindow):
         new_offset = new_result.offset
 
         if len(self.last_model.results) == 0:
-            old_offset = -1
+            old_offset = new_offset
         else:
             old_offset = self.last_model.results[0].offset
 
         if new_offset != old_offset:
-            log.info("Offset mismatch, add old model")
+            log.info("Offset change, add to model")
+            offs_it = QtGui.QStandardItem(str(old_offset))
+            offs_it.results = self.last_model.results
+            gain_it = QtGui.QStandardItem("Gain 0-255")
+            self.datamod.appendRow([offs_it, gain_it])
+
             self.last_model = model.Model()
 
         self.last_model.results.append(new_result)
  
-        #offs_it = QtGui.QStandardItem(str(self.offset))
-        #offs_it.results = one_model.results
-        #log.info("Store results: %s" % len(offs_it.results))
-        #gain_it = QtGui.QStandardItem("Gain 0-255")
-
-        #self.datamod.appendRow([offs_it, gain_it])
+        if self.load_position < self.ui.progressBar.total:
+            self.loadTimer.start(0)
 
         
     def get_line_total(self, file_name):

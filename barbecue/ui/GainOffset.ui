@@ -503,13 +503,13 @@
   </widget>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>Load</string>
    </property>
    <property name="toolTip">
     <string>Open</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+P</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSave">
