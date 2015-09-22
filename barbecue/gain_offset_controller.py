@@ -330,7 +330,7 @@ class GainOffset(QtGui.QMainWindow):
     def save_process(self):
         """ Select a filename to save the current results.
         """
-        file_name = self.file_dialog.getOpenFileName()
+        file_name = self.file_dialog.getSaveFileName()
         
         # Trigger the timer after the dialog has had a chance to close
         self.save_wait_timer.timeout.connect(lambda: self.save_file(file_name))
