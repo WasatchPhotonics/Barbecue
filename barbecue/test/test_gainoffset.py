@@ -142,18 +142,22 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # Gain value is the internal range 
         self.form.ui.spinBoxOffsetStart.setValue(0)
         self.form.ui.spinBoxOffsetEnd.setValue(1)
+        self.form.ui.spinBoxGainStart.setValue(0)
+        self.form.ui.spinBoxGainEnd.setValue(1)
 
         # Click the scan button
         self.form.ui.toolButtonStart.click()
 
         # verify that the datamodel increases in size
+        QtTest.QTest.qWait(1000)
         dm = self.form.datamod
-        self.assertEqual(dm.rowCount(), 1)
+        self.assertEqual(dm.rowCount(), 2)
 
         # Append another scan group, verify the result size
-        self.form.ui.spinBoxOffsetEnd.setValue(15)
+        self.form.ui.spinBoxOffsetEnd.setValue(16)
         self.form.ui.toolButtonStart.click()
-        self.assertEqual(dm.rowCount(), 16)
+        QtTest.QTest.qWait(1000)
+        self.assertEqual(dm.rowCount(), 19)
 
     def test_summary_display_updates(self):
         # Set offset and gain to very short values, verify the display
@@ -197,7 +201,8 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # the file dialog so you can add an auto-close timer or a
         # default value. For now just ignore that portion
 
-        self.assertTrue(self.form.save_file("test_file.csv"))
+        QtTest.QTest.qWait(1000)
+        self.form.save_file("test_file.csv")
 
         # Now look at the file, make sure it is the correct length
         self.assertTrue(self.file_lines(), 2)
@@ -251,6 +256,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.form.ui.toolButtonStart.click()
 
         # Store the first data values
+        QtTest.QTest.qWait(1000)
         plot = self.form.ui.image_dialog.get_plot()
         start_data = plot.get_default_item().get_data(0,0)
 
@@ -264,14 +270,13 @@ class TestGainOffsetControllerView(unittest.TestCase):
         child = self.form.childAt(treeview_pos)
         QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton)
 
-
+        QtTest.QTest.qWait(1000)
         end_data = plot.get_default_item().get_data(0,0)
         self.assertNotEqual(start_data, end_data)
 
     def test_progress_bar(self):
         # On startup, progress bar is disabled
         pg = self.form.ui.progressBar
-        self.assertFalse(pg.isTextVisible())
         self.assertFalse(pg.isVisible())
 
         # Set a small scan parameter, 
@@ -285,7 +290,6 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.form.ui.toolButtonStart.click()
         QtTest.QTest.qWait(1000)
         self.assertTrue(pg.isVisible())
-        self.assertTrue(pg.isTextVisible())
         self.assertEqual(pg.value(), 100)
 
     def test_stop_button(self):
@@ -336,9 +340,6 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.assertNotEqual(first_val, second_val)
 
 
-
-
- 
 class TestGainOffsetScript(unittest.TestCase):
 
     def tearDown(self):

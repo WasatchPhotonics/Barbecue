@@ -13,7 +13,7 @@ class Model(object):
     """
     def __init__(self):
         super(Model, self).__init__()
-        log.info("Model created")
+        #log.info("created")
         self.results = []
         self.device = None
 
@@ -47,7 +47,7 @@ class Model(object):
             dev = simulation.SimulatedCobraSLED()
 
         result = dev.setup_pipe()
-        log.info("Setup result is: %s" % result)
+        #log.info("Setup result is: %s" % result)
 
         result = dev.set_gain(gain)
         result = dev.set_offset(offset)

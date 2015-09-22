@@ -19,7 +19,7 @@ class GainOffset(QtGui.QMainWindow):
     """
     def __init__(self):
         super(GainOffset, self).__init__()
-        log.debug("creation")
+        #log.debug("creation")
 
         from barbecue.ui.GainOffset_layout import Ui_MainWindow
         self.ui = Ui_MainWindow()
@@ -170,7 +170,7 @@ class GainOffset(QtGui.QMainWindow):
         for gain_row in item.results:
             src_data.append(gain_row.data)
 
-        log.info("How many rows: %s" % len(src_data))
+        #log.info("How many rows: %s" % len(src_data))
         img_data = range(len(src_data))
 
         position = 0
@@ -278,7 +278,7 @@ class GainOffset(QtGui.QMainWindow):
         """ Create a summary text showing how many iterations will be
         processed.
         """
-        log.info("update summary")
+        #log.info("update summary")
         offset_range = self.ui.spinBoxOffsetEnd.value() - \
                        self.ui.spinBoxOffsetStart.value() + 1
 
@@ -322,7 +322,7 @@ class GainOffset(QtGui.QMainWindow):
         processed.
         """
  
-        log.info("Process offset: %s" % self.offset)
+        #log.info("Process offset: %s" % self.offset)
        
         gain = self.orig_gain_start
         gain_group = []
@@ -338,7 +338,7 @@ class GainOffset(QtGui.QMainWindow):
 
         offs_it = QtGui.QStandardItem(str(self.offset))
         offs_it.results = one_model.results
-        log.info("Store results: %s" % len(offs_it.results))
+        #log.info("Store results: %s" % len(offs_it.results))
         gain_it = QtGui.QStandardItem("Gain 0-255")
 
         self.datamod.appendRow([offs_it, gain_it])
@@ -347,7 +347,7 @@ class GainOffset(QtGui.QMainWindow):
 
         if self.offset <= self.orig_offset_end:
             if not self.processTimer.isActive():
-                log.info("Start timer: %s" % self.offset)
+                #log.info("Start timer: %s" % self.offset)
                 self.processTimer.start(0)
 
 
