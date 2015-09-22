@@ -192,7 +192,12 @@ class GainOffset(QtGui.QMainWindow):
         new_data = numpy.array(img_data).astype(float)
         
         plot = self.ui.image_dialog.get_plot()
-        plot.get_default_item().set_data(new_data)
+
+        # Apparently get_default_item is not supported by the python xy
+        # implementation of guiqwt. 
+        #plot.get_default_item().set_data(new_data)
+        first = plot.get_items()[1]
+        first.set_data(new_data)
 
         plot.replot()
  

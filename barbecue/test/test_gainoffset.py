@@ -369,7 +369,12 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # the child, then click the button? If you do mouseclick on the
         # treeview widget directly it does nothing.
         plot = self.form.ui.image_dialog.get_plot()
-        start_data = plot.get_default_item().get_data(0,10)
+
+        # Apparently get_default_item is not supported by the python xy
+        # implementation of guiqwt. 
+        #start_data = plot.get_default_item().get_data(0,10)
+        first_item = plot.get_items()[1]
+        start_data = first_item.get_data(0, 10)
 
         treeview_pos = QtCore.QPoint(140, 500)
         child = self.form.childAt(treeview_pos)
@@ -378,7 +383,8 @@ class TestGainOffsetControllerView(unittest.TestCase):
                                 pos=relative_move
                                )
 
-        end_data = plot.get_default_item().get_data(0,10)
+        first_item = plot.get_items()[1]
+        end_data = first_item.get_data(0, 10)
         self.assertNotEqual(start_data, end_data)
         
 class TestGainOffsetScript(unittest.TestCase):
