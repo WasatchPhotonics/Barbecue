@@ -37,11 +37,20 @@ class Model(object):
         elif self.device == "cobra":
             self._dev = DALSA.Cobra()
 
+        # Yes, this order is correct. You have to setup, then grap from
+        # the pipe, then open the port and then start the scan. You
+        # might think this would cause a timeout in the sap net grab.
+        # Apparently it does not. However, if you setup the pipe and/or
+        # open the serial port first, everything will look fine. Until
+        # you go to write to the serial port after a grab operation.
+        # Then the write command will succeed, but reading back the
+        # response will always result in '', and no changes appear to be
+        # written to the device.
         result = self._dev.setup_pipe()
         result, data = self._dev.grab_pipe()
         forc_res = self._dev.open_port()
         forc_res = self._dev.start_scan()
-        #log.info("Setup result is: %s" % result)
+        
         return True
 
     def scan(self, gain, offset, linetime, integration):
@@ -53,7 +62,6 @@ class Model(object):
 
         if gain == None or offset == None:
             raise(ValueError, "must specify gain, offset")
-
 
         result = self._dev.set_gain(gain)
         result = self._dev.set_offset(offset)

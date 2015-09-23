@@ -4,7 +4,6 @@
 import csv
 import numpy
 import logging
-import StringIO
 
 from PyQt4 import QtGui, QtCore
 
@@ -30,6 +29,7 @@ class GainOffset(QtGui.QMainWindow):
 
         self.replace_widgets()
 
+        self.last_model = None
         self.set_app_defaults()
         self.setup_signals()
 
@@ -103,18 +103,18 @@ class GainOffset(QtGui.QMainWindow):
 
         # Create the timer so the test controller can have access to the
         # various parts of the gain/offset loop control
-        self.processTimer = QtCore.QTimer()
-        self.processTimer.setSingleShot(True)
-        self.processTimer.timeout.connect(self.loop_process)
+        self.process_timer = QtCore.QTimer()
+        self.process_timer.setSingleShot(True)
+        self.process_timer.timeout.connect(self.loop_process)
 
         # Progress indicators for data saving
-        self.saveTimer = QtCore.QTimer()
-        self.saveTimer.setSingleShot(True)
-        self.saveTimer.timeout.connect(self.loop_save)
+        self.save_timer = QtCore.QTimer()
+        self.save_timer.setSingleShot(True)
+        self.save_timer.timeout.connect(self.loop_save)
 
-        self.loadTimer = QtCore.QTimer()
-        self.loadTimer.setSingleShot(True)
-        self.loadTimer.timeout.connect(self.loop_load)
+        self.load_timer = QtCore.QTimer()
+        self.load_timer.setSingleShot(True)
+        self.load_timer.timeout.connect(self.loop_load)
 
         # When the save file action is activated, it needs to wait for
         # the filename selection dialog to close first. Signal is
@@ -125,6 +125,12 @@ class GainOffset(QtGui.QMainWindow):
         self.load_wait_timer = QtCore.QTimer()
         self.load_wait_timer.setSingleShot(True)
 
+        # Load / save / process parameters
+        self.load_position = 0
+        self.orig_gain_start = 0
+
+        self.linetime = self.ui.spinBoxLineTime.value()
+        self.integration = self.ui.spinBoxIntegrationTime.value()
 
     def setup_signals(self):
         """ Configure widget signals.
@@ -184,15 +190,15 @@ class GainOffset(QtGui.QMainWindow):
 
         new_data = numpy.array(img_data).astype(float)
 
-        plot = self.ui.image_dialog.get_plot()
+        local_plot = self.ui.image_dialog.get_plot()
 
         # Apparently get_default_item is not supported by the python xy
         # implementation of guiqwt.
         #plot.get_default_item().set_data(new_data)
-        first = plot.get_items()[1]
+        first = local_plot.get_items()[1]
         first.set_data(new_data)
 
-        plot.replot()
+        local_plot.replot()
 
     def open_process(self):
         """ Get a filename to load.
@@ -221,9 +227,8 @@ class GainOffset(QtGui.QMainWindow):
                                        csv_header, 'Data')
 
         # Read past the header:
-        header = self.csv_file.next()
+        self.csv_file.next()
 
-        self.load_position = 0
         self.last_model = None
         self.loop_load()
 
@@ -232,12 +237,11 @@ class GainOffset(QtGui.QMainWindow):
         update the interface progress.
         """
 
-        line = None
         line_fail = 0
         try:
             line = self.csv_file.next()
             #log.info("File header: %s" % line['Offset'])
-        except:
+        except StopIteration:
             line_fail = 1
             log.warn("Problem reading file")
 
@@ -288,7 +292,7 @@ class GainOffset(QtGui.QMainWindow):
         self.last_model.results.append(new_result)
 
         if self.load_position < self.ui.progressBar.total:
-            self.loadTimer.start(0)
+            self.load_timer.start(0)
 
     def get_line_total(self, file_name):
         """ Make a pass through the file, read the total number of
@@ -296,7 +300,7 @@ class GainOffset(QtGui.QMainWindow):
         """
         lfile = open(file_name)
         lcount = 0
-        for line in lfile.readlines():
+        for _ in lfile.readlines():
             lcount += 1
         lfile.close()
         return lcount
@@ -312,7 +316,7 @@ class GainOffset(QtGui.QMainWindow):
     def save_file(self, file_name):
         """ Write the current contents of the datamodel displayed in the
         tree widget to disk.
-        """ 
+        """
         total = self.datamod.rowCount() * 255
 
         msg = "Saving %s combinations to %s" % (total, file_name)
@@ -332,17 +336,15 @@ class GainOffset(QtGui.QMainWindow):
         """ Iterate through the data to be saved in a timer to enable
         load inhibits and progress bar updates.
         """
-            
-        item = self.datamod.item(self.save_position, 0)
-        log.info("Write item: %s" % item)
 
-        self.write_results(self.csv_file, item)            
+        item = self.datamod.item(self.save_position, 0)
+        log.info("Write item: %s", item)
+
+        self.write_results(self.csv_file, item)
         self.save_position += 1
 
-        if self.save_position >= self.datamod.rowCount():
-            self.csv_file.close()
-        else:
-            self.saveTimer.start(0)
+        if self.save_position < self.datamod.rowCount():
+            self.save_timer.start(0)
 
     def write_results(self, csv_file, item):
         """ Print the contents of the datamodel item to disk.
@@ -388,7 +390,6 @@ class GainOffset(QtGui.QMainWindow):
         trigger the loop timer to start the process.
         """
         log.info("Start setup")
-        self.stop_scan = False
         self.ui.progressBar.setVisible(True)
 
         self.orig_gain_start = self.ui.spinBoxGainStart.value()
@@ -405,24 +406,23 @@ class GainOffset(QtGui.QMainWindow):
 
         self.acquire_model = model.Model()
         self.acquire_model.assign("single")
-        self.processTimer.start(0)
+        self.process_timer.start(0)
 
     def loop_process(self):
         """ Once the timer has been activated, loop through the test
         iteration structure until all offset/gain options have been
         processed.
         """
- 
-        #log.info("Process offset: %s" % self.offset)
-       
+
         gain = self.orig_gain_start
-        gain_group = []
         while gain <= self.orig_gain_end:
             #log.debug("Gain: %s" % gain)
-            result = self.acquire_model.scan(gain, self.offset, 
-                                             self.linetime, 
+            result = self.acquire_model.scan(gain, self.offset,
+                                             self.linetime,
                                              self.integration
                                             )
+            if not result:
+                log.critical("Problem scan %s, %s", gain, self.offset)
 
             self.update_progress_bar()
             gain += 1
@@ -441,50 +441,45 @@ class GainOffset(QtGui.QMainWindow):
         self.offset += 1
 
         if self.offset <= self.orig_offset_end:
-            if not self.processTimer.isActive():
+            if not self.process_timer.isActive():
                 #log.info("Start timer: %s" % self.offset)
-                self.processTimer.start(10)
+                self.process_timer.start(10)
 
         else:
             log.info("end offset loop")
-            
-
 
     def stop_process(self):
         """ set the global variable to inhibit a running process, reset
         gui items.
-        """      
-        self.stop_scan = True
-        self.processTimer.stop()
-        self.saveTimer.stop()
- 
+        """
+        self.process_timer.stop()
+        self.save_timer.stop()
+
     def update_progress_bar(self):
         """ Given a op_count value, assign the progress bar to the
-        percentage of total operations. 
+        percentage of total operations.
         """
         self.op_count += 1
         self.op_count = self.op_count * 1.0
         tot = self.ui.progressBar.total * 1.0
         perc = (self.op_count / tot) * 100.0
         self.ui.progressBar.setValue(perc)
-        #log.info("progress: %s " % self.ui.progressBar.value())
-        
 
-    def move_linetime(self, event):
+    def move_linetime(self):
         """ Change the integration time range to make sure the user
         cannot set it more than 2 - line time.
         """
         lt_value = self.ui.spinBoxLineTime.value()
-        self.ui.spinBoxIntegrationTime.setMaximum(lt_value - 2) 
+        self.ui.spinBoxIntegrationTime.setMaximum(lt_value - 2)
 
-    def move_gain_range(self, event):
+    def move_gain_range(self):
         """ Make sure the end value is always at least 1 more than the
         start value.
         """
         gs_value = self.ui.spinBoxGainStart.value()
         self.ui.spinBoxGainEnd.setMinimum(gs_value + 1)
 
-    def move_offset_range(self, event):
+    def move_offset_range(self):
         """ Make sure the end value is always at least 1 more than the
         start value.
         """
@@ -497,9 +492,9 @@ class NoButtonImageDialog(plot.ImageDialog):
     """
 
     def __init__(self):
-        options=dict(show_xsection=False)
+        options = dict(show_xsection=False)
         super(NoButtonImageDialog, self).__init__(toolbar=True,
-                                                  edit=True, 
+                                                  edit=True,
                                                   options=options)
 
         self.create_image()
