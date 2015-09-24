@@ -37,7 +37,7 @@ class Model(object):
         elif self.device == "cobra":
             self._dev = DALSA.Cobra()
 
-        # Yes, this order is correct. You have to setup, then grap from
+        # Yes, this order is correct. You have to setup, then grab from
         # the pipe, then open the port and then start the scan. You
         # might think this would cause a timeout in the sap net grab.
         # Apparently it does not. However, if you setup the pipe and/or

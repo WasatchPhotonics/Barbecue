@@ -355,6 +355,7 @@ class TestGainOffsetControllerView(unittest.TestCase):
         self.assertNotEqual(start_progress, mid_progress)
 
         # Make sure the total entries is two
+        QtTest.QTest.qWait(1000)
         dm = self.form.datamod
         self.assertEqual(dm.rowCount(), 2)
             
