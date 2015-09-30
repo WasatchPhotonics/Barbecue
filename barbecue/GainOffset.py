@@ -7,7 +7,7 @@ import sys
 import logging
 import argparse
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from barbecue import gain_offset_controller
 
@@ -71,6 +71,8 @@ class GainOffsetApplication(object):
         """
         if not self.args.testing:
             app = QtGui.QApplication([])
+        else:    
+            self.delay_close()
 
         self.form = gain_offset_controller.GainOffset()
         #self.form.set_parameters(self.args)
@@ -78,6 +80,19 @@ class GainOffsetApplication(object):
         if not self.args.testing:
             sys.exit(app.exec_())
 
+    def delay_close(self):
+        """ For testing purposes, create a qtimer that triggers the
+        close event after a delay.
+        """
+        log.debug("Trigger delay close")
+        self.close_timer = QtCore.QTimer()
+        self.close_timer.timeout.connect(self.closeEvent)
+        self.close_timer.start(9000)
+
+    def closeEvent(self):
+        # .quit required for test cases to exit 
+        QtGui.QApplication.quit()
+        #event.accept()
 
 def main(argv=None):
     """ main calls the wrapper code around the application objects with

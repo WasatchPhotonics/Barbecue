@@ -256,7 +256,10 @@ class TestGainOffsetControllerView(unittest.TestCase):
         # Store the first data values
         QtTest.QTest.qWait(1000)
         plot = self.form.ui.image_dialog.get_plot()
-        start_data = plot.get_default_item().get_data(0,0)
+        # Apparently get_default_item is not supported by the python xy
+        # implementation of guiqwt. 
+        #start_data = plot.get_default_item().get_data(0,0)
+        start_data = plot.get_items()[1].get_data(0,0)
 
         # Click the first entry in the tree widget, verify that the
         # image data changes
@@ -269,7 +272,10 @@ class TestGainOffsetControllerView(unittest.TestCase):
         QtTest.QTest.mouseClick(child, QtCore.Qt.LeftButton)
 
         QtTest.QTest.qWait(1000)
-        end_data = plot.get_default_item().get_data(0,0)
+        # Apparently get_default_item is not supported by the python xy
+        # implementation of guiqwt. 
+        #start_data = plot.get_default_item().get_data(0,0)
+        end_data = plot.get_items()[1].get_data(0,0)
         self.assertNotEqual(start_data, end_data)
 
     def test_progress_bar(self):
@@ -409,9 +415,6 @@ class TestGainOffsetScript(unittest.TestCase):
         self.assertTrue(args.testing)
 
     def test_main_options(self):
-        result = GainOffset.main(None)
-        self.assertEquals(2, result)
-
         # Verify that main run with the testing option auto-closes the
         # application
         result = GainOffset.main(["unittest", "-t"])
